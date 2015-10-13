@@ -1,4 +1,4 @@
-FROM php:5.6-apache
+FROM php:5.5-apache
 MAINTAINER paolo.cuffiani@chialab.it
 
 # Install PHP extensions and PECL modules.
