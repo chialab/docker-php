@@ -1,22 +1,27 @@
-FROM php:5.5-apache
+FROM php:5.5-fpm
 MAINTAINER paolo.cuffiani@chialab.it
 
 # Install PHP extensions and PECL modules.
-RUN apt-get update && apt-get install -y \
+RUN buildDeps=" \
+        libmemcached-dev \
+        libmysqlclient-dev \
+        libsasl2-dev \
+    " \
+    runtimeDeps=" \
         libfreetype6-dev \
         libicu-dev \
-        libjpeg62-turbo-dev \
+        libjpeg-dev \
         libmcrypt-dev \
-        libmemcached-dev \
         libmemcachedutil2 \
-        libmysqlclient18 \
         libpng12-dev \
         libpq-dev \
-        zlib1g-dev \
+    " \
+    && apt-get update && apt-get install -y $buildDeps $runtimeDeps \
     && docker-php-ext-install calendar iconv intl mbstring mcrypt mysql mysqli pdo_mysql pdo_pgsql pgsql zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
     && pecl install memcached redis \
-    && docker-php-ext-enable memcached.so redis.so
+    && docker-php-ext-enable memcached.so redis.so \
+    && apt-get purge -y --auto-remove $buildDeps
 
-CMD ["apache2-foreground"]
+CMD ["php-fpm"]
