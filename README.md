@@ -1,12 +1,12 @@
 # Docker PHP images
-Docker images built on top of the [official PHP images](https://hub.docker.com/_/php/) with the addition of some common and useful extensions. You can find these images on the [Docker Hub](https://hub.docker.com/chialab/php/) (and if you're reading this file, you're probably already there).
+Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
 
 An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/Chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
-For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/chialab/php-dev/), instead.
+For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), instead.
 
 ## Available tags and `Dockerfile` links
-- [`latest` (_latest/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/latest/Dockerfile)
+- [`latest` (_Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/Dockerfile)
 - [`5.4-apache` (_5.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.4/apache/Dockerfile)
 - [`5.4-fpm` (_5.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.4/fpm/Dockerfile)
 - [`5.5-apache` (_5.5/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.5/apache/Dockerfile)
@@ -18,7 +18,7 @@ As you might have guessed, all tags are built on top of the corresponding tag of
 
 ## Installed extensions
 The following modules and extensions have been enabled,
-in addition to those you can already find in the [official PHP image](https://hub.docker.com/_/php/):
+in addition to those you can already find in the [official PHP image](https://hub.docker.com/r/_/php/):
 
 - `calendar`
 - `iconv`
