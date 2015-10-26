@@ -1,7 +1,7 @@
 .PHONY: pull build test
 
-PARENT_IMAGE = php
-IMAGE = chialab/php
+PARENT_IMAGE = chialab/php
+IMAGE = chialab/php-dev
 TAGS = \
 	latest \
 	5.4-apache \
@@ -9,9 +9,7 @@ TAGS = \
 	5.5-apache \
 	5.5-fpm \
 	5.6-apache \
-	5.6-fpm \
-	7.0-apache \
-	7.0-fpm
+	5.6-fpm
 EXTENSIONS = \
 	bz2 \
 	calendar \
@@ -27,6 +25,7 @@ EXTENSIONS = \
 	pdo_pgsql \
 	pgsql \
 	redis \
+	Xdebug \
 	zip
 NO_PHP_7 = memcached mysql redis
 
@@ -60,6 +59,27 @@ test:
 
 	@echo "Checking Composer... \c";
 	@if [[ -z `docker run --rm $(IMAGE):latest composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
+		echo 'FAIL'; \
+		exit 1; \
+	fi
+	@echo 'OK'
+
+	@echo "Checking PHP_CodeSniffer... \c";
+	@if [[ -z `docker run --rm $(IMAGE):latest phpcs --version | grep '^PHP_CodeSniffer version \d\d*\.\d\d*\.\d\d*'` ]]; then \
+		echo 'FAIL'; \
+		exit 1; \
+	fi
+	@echo 'OK'
+
+	@echo "Checking PHPMD... \c";
+	@if [[ -z `docker run --rm $(IMAGE):latest phpmd --version | grep '^PHPMD \d\d*\.\d\d*\.\d\d*'` ]]; then \
+		echo 'FAIL'; \
+		exit 1; \
+	fi
+	@echo 'OK'
+
+	@echo "Checking PHPUnit... \c";
+	@if [[ -z `docker run --rm $(IMAGE):latest phpunit --version | grep '^PHPUnit \d\d*\.\d\d*\.\d\d*'` ]]; then \
 		echo 'FAIL'; \
 		exit 1; \
 	fi

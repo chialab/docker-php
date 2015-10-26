@@ -20,23 +20,29 @@ As you might have guessed, all tags are built on top of the corresponding tag of
 The following modules and extensions have been enabled,
 in addition to those you can already find in the [official PHP image](https://hub.docker.com/r/_/php/):
 
+- `bz2`
 - `calendar`
 - `iconv`
 - `intl`
 - `gd`
 - `mbstring`
 - `mcrypt`
-- `memcached`
-- `mysql`
+- `memcached` (_only PHP 5.x_)
+- `mysql` (_only PHP 5.x_)
 - `mysqli`
 - `pdo_mysql`
 - `pdo_pgsql`
 - `pgsql`
-- `redis`
+- `redis` (_only PHP 5.x, yet_)
 - `xdebug`
 - `zip`
 
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases (especially in a development environment), you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
+
+## Composer
+[Composer](https://getcomposer.org) is installed globally in the image tagged `latest` (that is meant for CLI usage). Please, refer to their documentation for usage hints.
+
+Also, [PHPUnit](https://phpunit.de), [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) and [PHPMD](http://phpmd.org) have been added to the global `composer.json`, and can be invoked via command line.
 
 ## Configuring XDebug
 XDebug is installed, but not yet configured.
@@ -64,4 +70,4 @@ fastcgi_param PHP_VALUE "xdebug.remote_enable=1\nxdebug.remote_host=192.168.99.1
 ## Contributing
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
 
-Pull requests are welcome, too! 😁 Please, check that things are working as expected before attempting a pull request, as there are no automated tests (yet) to perform such checks for you. Also, it would be nice if you could follow [best practices for writing Dockerfiles](https://docs.docker.com/articles/dockerfile_best-practices/).
+Pull requests are welcome, too! 😁 Please, run `make build` and `make test` before attempting a pull request. Also, it would be nice if you could follow [best practices for writing Dockerfiles](https://docs.docker.com/articles/dockerfile_best-practices/).
