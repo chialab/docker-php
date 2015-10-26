@@ -13,6 +13,8 @@ For development environments, you might want to choose an [image with XDebug ins
 - [`5.5-fpm` (_5.5/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.5/fpm/Dockerfile)
 - [`5.6-apache` (_5.6/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.6/apache/Dockerfile)
 - [`5.6-fpm` (_5.6/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.6/fpm/Dockerfile)
+- [`7.0-apache` (_7.0/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.0/apache/Dockerfile)
+- [`7.0-fpm` (_7.0/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.0/fpm/Dockerfile)
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 
@@ -20,28 +22,31 @@ As you might have guessed, all tags are built on top of the corresponding tag of
 The following modules and extensions have been enabled,
 in addition to those you can already find in the [official PHP image](https://hub.docker.com/r/_/php/):
 
+- `bz2`
 - `calendar`
 - `iconv`
 - `intl`
 - `gd`
 - `mbstring`
 - `mcrypt`
-- `memcached`
-- `mysql`
+- `memcached` (_only PHP 5.x_)
+- `mysql` (_only PHP 5.x_)
 - `mysqli`
 - `pdo_mysql`
 - `pdo_pgsql`
 - `pgsql`
-- `redis`
+- `redis` (_only PHP 5.x, yet_)
 - `zip`
 
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
+## Composer
+[Composer](https://getcomposer.org) is installed globally in the image tagged `latest` (that is meant for CLI usage). Please, refer to their documentation for usage hints.
+
 ## Known issues
 - Image virtual size is over 600 MB 😞 Even though PHP official images themselves are over 450 MB, we will try to cut size down as much as we can.
-- Tests are needed.
 
 ## Contributing
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
 
-Pull requests are welcome, too! 😁 Please, check that things are working as expected before attempting a pull request, as there are no automated tests (yet) to perform such checks for you. Also, it would be nice if you could follow [best practices for writing Dockerfiles](https://docs.docker.com/articles/dockerfile_best-practices/).
+Pull requests are welcome, too! 😁 Please, run `make build` and `make test` before attempting a pull request. Also, it would be nice if you could stick to the [best practices for writing Dockerfiles](https://docs.docker.com/articles/dockerfile_best-practices/).
