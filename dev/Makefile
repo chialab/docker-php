@@ -9,9 +9,7 @@ TAGS = \
 	5.5-apache \
 	5.5-fpm \
 	5.6-apache \
-	5.6-fpm \
-	7.0-apache \
-	7.0-fpm
+	5.6-fpm
 EXTENSIONS = \
 	bz2 \
 	calendar \
@@ -36,8 +34,7 @@ pull:
 		docker pull $(PARENT_IMAGE):$${tag}; \
 	done
 
-build:
-#build: pull
+build: pull
 	@for tag in $(TAGS); do \
 		dir=`echo "$${tag}" | sed s:-:/:`; \
 		if [ $$tag == 'latest' ]; then \
