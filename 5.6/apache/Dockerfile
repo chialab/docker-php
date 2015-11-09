@@ -1,5 +1,5 @@
 FROM php:5.6-apache
-MAINTAINER paolo.cuffiani@chialab.it
+MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
@@ -24,4 +24,5 @@ RUN buildDeps=" \
     && pecl install memcached redis \
     && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
-    && rm -r /var/lib/apt/lists/*
+    && rm -r /var/lib/apt/lists/* \
+    && a2enmod rewrite

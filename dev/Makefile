@@ -9,7 +9,9 @@ TAGS = \
 	5.5-apache \
 	5.5-fpm \
 	5.6-apache \
-	5.6-fpm
+	5.6-fpm \
+	7.0-apache \
+	7.0-fpm
 EXTENSIONS = \
 	bz2 \
 	calendar \
@@ -34,7 +36,8 @@ pull:
 		docker pull $(PARENT_IMAGE):$${tag}; \
 	done
 
-build: pull
+build:
+#build: pull
 	@for tag in $(TAGS); do \
 		dir=`echo "$${tag}" | sed s:-:/:`; \
 		if [ $$tag == 'latest' ]; then \
@@ -54,6 +57,13 @@ test:
 				exit 1; \
 			fi \
 		done; \
+		if [[ $$tag = *'-apache' ]]; then \
+			apache=`docker run --rm $(IMAGE):$${tag} apache2ctl -M 2> /dev/null`; \
+			if [[ $$apache != *'rewrite_module'* ]]; then \
+				echo 'FAIL [mod_rewrite]'; \
+				exit 1; \
+			fi \
+		fi; \
 		echo 'OK'; \
 	done
 

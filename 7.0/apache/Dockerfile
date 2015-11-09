@@ -1,5 +1,5 @@
 FROM php:7.0-apache
-MAINTAINER paolo.cuffiani@chialab.it
+MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
@@ -19,4 +19,5 @@ RUN buildDeps=" \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
     && apt-get purge -y --auto-remove $buildDeps \
-    && rm -r /var/lib/apt/lists/*
+    && rm -r /var/lib/apt/lists/* \
+    && a2enmod rewrite

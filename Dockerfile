@@ -1,5 +1,5 @@
 FROM php:latest
-MAINTAINER paolo.cuffiani@chialab.it
+MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \

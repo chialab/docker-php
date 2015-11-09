@@ -55,6 +55,13 @@ test:
 				exit 1; \
 			fi \
 		done; \
+		if [[ $$tag = *'-apache' ]]; then \
+			apache=`docker run --rm $(IMAGE):$${tag} apache2ctl -M 2> /dev/null`; \
+			if [[ $$apache != *'rewrite_module'* ]]; then \
+				echo 'FAIL [mod_rewrite]'; \
+				exit 1; \
+			fi \
+		fi; \
 		echo 'OK'; \
 	done
 
