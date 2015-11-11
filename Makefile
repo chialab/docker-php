@@ -4,12 +4,16 @@ PARENT_IMAGE = php
 IMAGE = chialab/php
 TAGS = \
 	latest \
+	5.4 \
 	5.4-apache \
 	5.4-fpm \
+	5.5 \
 	5.5-apache \
 	5.5-fpm \
+	5.6 \
 	5.6-apache \
 	5.6-fpm \
+	7.0 \
 	7.0-apache \
 	7.0-fpm
 EXTENSIONS = \
@@ -62,12 +66,11 @@ test:
 				exit 1; \
 			fi \
 		fi; \
+		if [[ $$tag != *'-apache' ]] && [[ $$tag != *'-fpm' ]]; then \
+			if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
+				echo 'FAIL [Composer]'; \
+				exit 1; \
+			fi \
+		fi; \
 		echo 'OK'; \
 	done
-
-	@echo "Checking Composer... \c";
-	@if [[ -z `docker run --rm $(IMAGE):latest composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
-		echo 'FAIL'; \
-		exit 1; \
-	fi
-	@echo 'OK'

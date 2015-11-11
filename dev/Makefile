@@ -4,10 +4,13 @@ PARENT_IMAGE = chialab/php
 IMAGE = chialab/php-dev
 TAGS = \
 	latest \
+	5.4 \
 	5.4-apache \
 	5.4-fpm \
+	5.5 \
 	5.5-apache \
 	5.5-fpm \
+	5.6 \
 	5.6-apache \
 	5.6-fpm
 EXTENSIONS = \
@@ -61,33 +64,23 @@ test:
 				exit 1; \
 			fi \
 		fi; \
+		if [[ $$tag != *'-apache' ]] && [[ $$tag != *'-fpm' ]]; then \
+			if [[ -z `docker run --rm $(IMAGE):latest composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
+				echo 'FAIL [Composer]'; \
+				exit 1; \
+			fi; \
+			if [[ -z `docker run --rm $(IMAGE):latest phpcs --version | grep '^PHP_CodeSniffer version \d\d*\.\d\d*\.\d\d*'` ]]; then \
+				echo 'FAIL [PHP_CodeSniffer]'; \
+				exit 1; \
+			fi; \
+			if [[ -z `docker run --rm $(IMAGE):latest phpmd --version | grep '^PHPMD \d\d*\.\d\d*\.\d\d*'` ]]; then \
+				echo 'FAIL [PHPMD]'; \
+				exit 1; \
+			fi; \
+			if [[ -z `docker run --rm $(IMAGE):latest phpunit --version | grep '^PHPUnit \d\d*\.\d\d*\.\d\d*'` ]]; then \
+				echo 'FAIL [PHPUnit]'; \
+				exit 1; \
+			fi \
+		fi; \
 		echo 'OK'; \
 	done
-
-	@echo "Checking Composer... \c";
-	@if [[ -z `docker run --rm $(IMAGE):latest composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
-		echo 'FAIL'; \
-		exit 1; \
-	fi
-	@echo 'OK'
-
-	@echo "Checking PHP_CodeSniffer... \c";
-	@if [[ -z `docker run --rm $(IMAGE):latest phpcs --version | grep '^PHP_CodeSniffer version \d\d*\.\d\d*\.\d\d*'` ]]; then \
-		echo 'FAIL'; \
-		exit 1; \
-	fi
-	@echo 'OK'
-
-	@echo "Checking PHPMD... \c";
-	@if [[ -z `docker run --rm $(IMAGE):latest phpmd --version | grep '^PHPMD \d\d*\.\d\d*\.\d\d*'` ]]; then \
-		echo 'FAIL'; \
-		exit 1; \
-	fi
-	@echo 'OK'
-
-	@echo "Checking PHPUnit... \c";
-	@if [[ -z `docker run --rm $(IMAGE):latest phpunit --version | grep '^PHPUnit \d\d*\.\d\d*\.\d\d*'` ]]; then \
-		echo 'FAIL'; \
-		exit 1; \
-	fi
-	@echo 'OK'
