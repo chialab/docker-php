@@ -1,0 +1,19 @@
+sudo: required
+
+language: ruby
+
+services:
+  - docker
+
+env:
+  - DIR=.
+  - DIR=dev/
+
+before_install:
+- make -C ${DIR} pull
+
+install:
+- make -C ${DIR} build-nopull
+
+script:
+- make -C ${DIR} test
