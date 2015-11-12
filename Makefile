@@ -55,26 +55,28 @@ test:
 	@echo 'Testing loaded extensions...'
 	@for tag in $(TAGS); do \
 		echo " - $${tag}... \c"; \
-		if [[ -z `docker images $(IMAGE) | grep "\s$${tag}\s"` ]]; then \
+		test=`docker images $(IMAGE) | grep "\s$${tag}\s"`; \
+		if [ -z "$${test}" ]; then \
 			echo 'FAIL [Missing image!!!]'; \
 			exit 1; \
 		fi; \
 		modules=`docker run --rm $(IMAGE):$${tag} php -m`; \
 		for ext in $(EXTENSIONS); do \
-			if ([[ $$tag != '7'* ]] || [[ "$(NO_PHP_7)" != *$$ext* ]]) && [[ $$modules != *$$ext* ]]; then \
+			if ([ $${tag:0:1} != '7' ] || [ "$${NO_PHP_7/$$ext}" = "$(NO_PHP_7)" ]) && [ "$${modules/$$ext}" = "$${modules}" ]; then \
 				echo "FAIL [$${ext}]"; \
 				exit 1; \
 			fi \
 		done; \
-		if [[ $$tag = *'-apache' ]]; then \
+		if [ "$${tag/'-apache'}" != "$${tag}" ]; then \
 			apache=`docker run --rm $(IMAGE):$${tag} apache2ctl -M 2> /dev/null`; \
-			if [[ $$apache != *'rewrite_module'* ]]; then \
+			if [ "$${apache/'rewrite_module'}" = "$${apache}" ]; then \
 				echo 'FAIL [mod_rewrite]'; \
 				exit 1; \
 			fi \
 		fi; \
-		if [[ $$tag != *'-apache' ]] && [[ $$tag != *'-fpm' ]]; then \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
+		if [ "$${tag/'-apache'}" = "$${tag}" ] && [ "$${tag/'-fpm'}" = "$${tag}" ]; then \
+			test=`docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version \d\d*\.\d\d*'`; \
+			if [ -z "$${test}" ]; then \
 				echo 'FAIL [Composer]'; \
 				exit 1; \
 			fi \
