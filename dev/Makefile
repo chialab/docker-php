@@ -40,7 +40,7 @@ pull:
 build-nopull:
 	@for tag in $(TAGS); do \
 		dir=`echo "$${tag}" | sed s:-:/:`; \
-		if [ $$tag == 'latest' ]; then \
+		if [ "$${tag}" == 'latest' ]; then \
 			dir='.'; \
 		fi; \
 		echo " - Building $(IMAGE):$${tag}..."; \
@@ -60,7 +60,7 @@ test:
 		fi; \
 		modules=`docker run --rm $(IMAGE):$${tag} php -m`; \
 		for ext in $(EXTENSIONS); do \
-			if ([ $${tag:0:1} != '7' ] || [ "$${NO_PHP_7/$$ext}" = "$(NO_PHP_7)" ]) && [ "$${modules/$$ext}" = "$${modules}" ]; then \
+			if ([ "$${tag:0:1}" != '7' ] || [ "$${NO_PHP_7/$$ext}" = "$(NO_PHP_7)" ]) && [ "$${modules/$$ext}" = "$${modules}" ]; then \
 				echo "FAIL [$${ext}]"; \
 				exit 1; \
 			fi \
