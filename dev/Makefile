@@ -40,7 +40,7 @@ pull:
 build-nopull:
 	@for tag in $(TAGS); do \
 		dir=`echo "$${tag}" | sed s:-:/:`; \
-		if [ "$${tag}" == 'latest' ]; then \
+		if [ "$${tag}" = 'latest' ]; then \
 			dir='.'; \
 		fi; \
 		echo " - Building $(IMAGE):$${tag}..."; \
