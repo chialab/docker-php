@@ -1,4 +1,4 @@
-.PHONY: pull build test
+.PHONY: pull build-nopull build test
 
 PARENT_IMAGE = chialab/php
 IMAGE = chialab/php-dev
@@ -37,7 +37,7 @@ pull:
 		docker pull $(PARENT_IMAGE):$${tag}; \
 	done
 
-build: pull
+build-nopull:
 	@for tag in $(TAGS); do \
 		dir=`echo "$${tag}" | sed s:-:/:`; \
 		if [ $$tag == 'latest' ]; then \
@@ -46,11 +46,17 @@ build: pull
 		docker build -t $(IMAGE):$${tag} $${dir}; \
 	done
 
+build: pull build-nopull
+
 test:
 	@echo 'Testing loaded extensions...'
 	@for tag in $(TAGS); do \
-		modules=`docker run --rm $(IMAGE):$${tag} php -m`; \
 		echo " - $${tag}... \c"; \
+		if [[ -z `docker images $(IMAGE) | grep "\s$${tag}\s"` ]]; then \
+			echo 'FAIL [Missing image!!!]'; \
+			exit 1; \
+		fi; \
+		modules=`docker run --rm $(IMAGE):$${tag} php -m`; \
 		for ext in $(EXTENSIONS); do \
 			if ([[ $$tag != '7'* ]] || [[ "$(NO_PHP_7)" != *$$ext* ]]) && [[ $$modules != *$$ext* ]]; then \
 				echo "FAIL [$${ext}]"; \
