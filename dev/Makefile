@@ -33,7 +33,9 @@ ifneq ($(VERSION),7.0)
 endif
 
 pull:
-    $(foreach tag,$(TAGS),docker pull $(PARENT_IMAGE):${tag};)
+	@for tag in $(TAGS); do \
+		docker pull $(PARENT_IMAGE):$${tag}; \
+	done
 
 build-nopull:
 	@for tag in $(TAGS); do \
