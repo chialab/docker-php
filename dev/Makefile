@@ -44,7 +44,7 @@ build-nopull:
 		if [ "$${tag}" = 'latest' ]; then \
 			dir='.'; \
 		fi; \
-		echo " - Building $(IMAGE):$${tag}..."; \
+		echo " =====> Building $(IMAGE):$${tag}..."; \
 		docker build --quiet -t $(IMAGE):$${tag} $${dir}; \
 	done
 
