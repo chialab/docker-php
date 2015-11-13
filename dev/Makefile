@@ -54,43 +54,38 @@ test:
 	@echo 'Testing loaded extensions...'
 	@for tag in $(TAGS); do \
 		echo " - $${tag}... \c"; \
-		test=`docker images $(IMAGE) | grep "\s$${tag}\s"`; \
-		if [ -z "$${test}" ]; then \
+		if [[ -z `docker images $(IMAGE) | grep "\s$${tag}\s"` ]]; then \
 			echo 'FAIL [Missing image!!!]'; \
 			exit 1; \
 		fi; \
 		modules=`docker run --rm $(IMAGE):$${tag} php -m`; \
 		for ext in $(EXTENSIONS); do \
-			if ([ "$${tag:0:1}" != '7' ] || [ "$${NO_PHP_7/$$ext}" = "$(NO_PHP_7)" ]) && [ "$${modules/$$ext}" = "$${modules}" ]; then \
+			if ([[ "$${tag}" != '7'* ]] || [[ "$(NO_PHP_7)" != *"$${ext}"* ]]) && [[ "$${modules}" != *"$${ext}"* ]]; then \
 				echo "FAIL [$${ext}]"; \
 				exit 1; \
 			fi \
 		done; \
-		if [ "$${tag/'-apache'}" != "$${tag}" ]; then \
+		if [[ "$${tag}" = *'-apache' ]]; then \
 			apache=`docker run --rm $(IMAGE):$${tag} apache2ctl -M 2> /dev/null`; \
-			if [ "$${apache/'rewrite_module'}" = "$${apache}" ]; then \
+			if [[ "$${apache}" != *'rewrite_module'* ]]; then \
 				echo 'FAIL [mod_rewrite]'; \
 				exit 1; \
 			fi \
 		fi; \
-		if [ "$${tag/'-apache'}" = "$${tag}" ] && [ "$${tag/'-fpm'}" = "$${tag}" ]; then \
-			test=`docker run --rm $(IMAGE):latest composer --version | grep '^Composer version \d\d*\.\d\d*'`; \
-			if [ -z "$${test}" ]; then \
+		if [[ "$${tag}" != *'-apache' ]] && [[ "$${tag}" != *'-fpm' ]]; then \
+			if [[ -z `docker run --rm $(IMAGE):latest composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
 				echo 'FAIL [Composer]'; \
 				exit 1; \
 			fi; \
-			test=`docker run --rm $(IMAGE):latest phpcs --version | grep '^PHP_CodeSniffer version \d\d*\.\d\d*\.\d\d*'`; \
-			if [ -z "$${test}" ]; then \
+			if [[ -z `docker run --rm $(IMAGE):latest phpcs --version | grep '^PHP_CodeSniffer version \d\d*\.\d\d*\.\d\d*'` ]]; then \
 				echo 'FAIL [PHP_CodeSniffer]'; \
 				exit 1; \
 			fi; \
-			test=`docker run --rm $(IMAGE):latest phpmd --version | grep '^PHPMD \d\d*\.\d\d*\.\d\d*'`; \
-			if [ -z "$${test}" ]; then \
+			if [[ -z `docker run --rm $(IMAGE):latest phpmd --version | grep '^PHPMD \d\d*\.\d\d*\.\d\d*'` ]]; then \
 				echo 'FAIL [PHPMD]'; \
 				exit 1; \
 			fi; \
-			test=`docker run --rm $(IMAGE):latest phpunit --version | grep '^PHPUnit \d\d*\.\d\d*\.\d\d*'`; \
-			if [ -z "$${test}" ]; then \
+			if [[ -z `docker run --rm $(IMAGE):latest phpunit --version | grep '^PHPUnit \d\d*\.\d\d*\.\d\d*'` ]]; then \
 				echo 'FAIL [PHPUnit]'; \
 				exit 1; \
 			fi \
