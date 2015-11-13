@@ -55,7 +55,7 @@ build: pull build-nopull
 test:
 	@echo 'Testing loaded extensions...'
 	@for tag in $(TAGS); do \
-		echo " - $${tag}... \c"; \
+		echo -e " - $${tag}... \c"; \
 		if [[ -z `docker images $(IMAGE) | grep "\s$${tag}\s"` ]]; then \
 			echo 'FAIL [Missing image!!!]'; \
 			exit 1; \
