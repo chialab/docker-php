@@ -40,7 +40,7 @@ pull:
 
 build-nopull:
 	@for tag in $(TAGS); do \
-		dir=`echo "$${tag}" | sed s:-:/:`; \
+		dir="$${tag/-//}"; \
 		if [ "$${tag}" = 'latest' ]; then \
 			dir='.'; \
 		fi; \
