@@ -43,7 +43,7 @@ pull:
 build-nopull:
 	@for tag in $(TAGS); do \
 		dir="$${tag/-//}"; \
-		if [ "$${tag}" = 'latest' ]; then \
+		if [[ "$${tag}" == 'latest' ]]; then \
 			dir='.'; \
 		fi; \
 		echo " =====> Building $(IMAGE):$${tag}..."; \
@@ -67,7 +67,7 @@ test:
 				exit 1; \
 			fi \
 		done; \
-		if [[ "$${tag}" = *'-apache' ]]; then \
+		if [[ "$${tag}" == *'-apache' ]]; then \
 			apache=`docker run --rm $(IMAGE):$${tag} apache2ctl -M 2> /dev/null`; \
 			if [[ "$${apache}" != *'rewrite_module'* ]]; then \
 				echo 'FAIL [mod_rewrite]'; \
@@ -75,7 +75,7 @@ test:
 			fi \
 		fi; \
 		if [[ "$${tag}" != *'-apache' ]] && [[ "$${tag}" != *'-fpm' ]]; then \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version \d\d*\.\d\d*'` ]]; then \
+			if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
 				echo 'FAIL [Composer]'; \
 				exit 1; \
 			fi \
