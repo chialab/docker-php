@@ -6,14 +6,21 @@ services:
   - docker
 
 env:
-  - DIR=.
-  - DIR=dev/
+  - DIR=.    VERSION=latest
+  - DIR=.    VERSION=5.4
+  - DIR=.    VERSION=5.5
+  - DIR=.    VERSION=5.6
+  - DIR=.    VERSION=7.0
+  - DIR=dev/ VERSION=latest
+  - DIR=dev/ VERSION=5.4
+  - DIR=dev/ VERSION=5.5
+  - DIR=dev/ VERSION=5.6
 
 before_install:
-- make -C ${DIR} pull
+- make -C ${DIR} pull VERSION=${VERSION}
 
 install:
-- make -C ${DIR} build-nopull
+- make -C ${DIR} build-nopull VERSION=${VERSION}
 
 script:
-- make -C ${DIR} test
+- make -C ${DIR} test VERSION=${VERSION}

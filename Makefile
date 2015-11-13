@@ -1,23 +1,19 @@
 SHELL := /bin/bash
 .PHONY: pull build-nopull build test
 
-PARENT_IMAGE = php
-IMAGE = chialab/php
-TAGS = \
-	latest \
-	5.4 \
-	5.4-apache \
-	5.4-fpm \
-	5.5 \
-	5.5-apache \
-	5.5-fpm \
-	5.6 \
-	5.6-apache \
-	5.6-fpm \
-	7.0 \
-	7.0-apache \
-	7.0-fpm
-EXTENSIONS = \
+PARENT_IMAGE := php
+IMAGE := chialab/php
+VERSION ?= latest
+
+# Tags.
+TAGS := $(VERSION)
+ifneq ($(VERSION),latest)
+	# Add `-apache` and `-fpm` suffix.
+	TAGS += $(VERSION)-apache $(VERSION)-fpm
+endif
+
+# Extensions.
+EXTENSIONS := \
 	bz2 \
 	calendar \
 	iconv \
@@ -25,28 +21,26 @@ EXTENSIONS = \
 	gd \
 	mbstring \
 	mcrypt \
-	memcached \
-	mysql \
 	mysqli \
 	pdo_mysql \
 	pdo_pgsql \
 	pgsql \
-	redis \
 	zip
-NO_PHP_7 = memcached mysql redis
+ifneq ($(VERSION),7.0)
+	# Add more extensions to 5.x series images.
+	EXTENSIONS += memcached mysql redis
+endif
 
 pull:
-	@for tag in $(TAGS); do \
-		docker pull $(PARENT_IMAGE):$${tag}; \
-	done
+    $(foreach tag,$(TAGS),docker pull $(PARENT_IMAGE):${tag};)
 
 build-nopull:
 	@for tag in $(TAGS); do \
+		echo " =====> Building $(IMAGE):$${tag}..."; \
 		dir="$${tag/-//}"; \
 		if [[ "$${tag}" == 'latest' ]]; then \
 			dir='.'; \
 		fi; \
-		echo " =====> Building $(IMAGE):$${tag}..."; \
 		docker build --quiet -t $(IMAGE):$${tag} $${dir}; \
 	done
 
@@ -62,7 +56,7 @@ test:
 		fi; \
 		modules=`docker run --rm $(IMAGE):$${tag} php -m`; \
 		for ext in $(EXTENSIONS); do \
-			if ([[ "$${tag}" != '7'* ]] || [[ "$(NO_PHP_7)" != *"$${ext}"* ]]) && [[ "$${modules}" != *"$${ext}"* ]]; then \
+			if [[ "$${modules}" != *"$${ext}"* ]]; then \
 				echo "FAIL [$${ext}]"; \
 				exit 1; \
 			fi \
