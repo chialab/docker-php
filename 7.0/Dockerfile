@@ -7,6 +7,8 @@ RUN buildDeps=" \
         libmysqlclient-dev \
     " \
     runtimeDeps=" \
+        curl \
+        git \
         libfreetype6-dev \
         libicu-dev \
         libjpeg-dev \
