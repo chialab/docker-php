@@ -26,7 +26,7 @@ EXTENSIONS := \
 	pdo_pgsql \
 	pgsql \
 	zip
-ifneq ($(VERSION),7.0)
+ifneq ($(VERSION),$(filter 7.0 latest, $(VERSION)))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += memcached mysql redis
 endif
