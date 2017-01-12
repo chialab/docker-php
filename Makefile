@@ -70,11 +70,9 @@ test:
 				exit 1; \
 			fi \
 		fi; \
-		if [[ "$${tag}" != *'-apache' ]] && [[ "$${tag}" != *'-fpm' ]]; then \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-				echo 'FAIL [Composer]'; \
-				exit 1; \
-			fi \
+		if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+			echo 'FAIL [Composer]'; \
+			exit 1; \
 		fi; \
 		echo 'OK'; \
 	done
