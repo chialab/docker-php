@@ -11,6 +11,7 @@ env:
   - DIR=.    VERSION=5.5
   - DIR=.    VERSION=5.6
   - DIR=.    VERSION=7.0
+  - DIR=.    VERSION=7.1
   - DIR=dev/ VERSION=latest
   - DIR=dev/ VERSION=5.5
   - DIR=dev/ VERSION=5.6
