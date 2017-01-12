@@ -9,6 +9,8 @@ RUN buildDeps=" \
         libsasl2-dev \
     " \
     runtimeDeps=" \
+        curl \
+        git \
         libfreetype6-dev \
         libicu-dev \
         libjpeg-dev \
@@ -25,3 +27,8 @@ RUN buildDeps=" \
     && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -r /var/lib/apt/lists/*
+
+# Install Composer.
+ENV COMPOSER_HOME /root/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
