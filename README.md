@@ -22,6 +22,9 @@ For development environments, you might want to choose an [image with XDebug ins
 - [`7.0` (_7.0/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.0/Dockerfile)
 - [`7.0-apache` (_7.0/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.0/apache/Dockerfile)
 - [`7.0-fpm` (_7.0/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.0/fpm/Dockerfile)
+- [`7.1` (_7.1/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.1/Dockerfile)
+- [`7.1-apache` (_7.1/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.1/apache/Dockerfile)
+- [`7.1-fpm` (_7.1/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.1/fpm/Dockerfile)
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 
@@ -42,13 +45,13 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `pdo_mysql`
 - `pdo_pgsql`
 - `pgsql`
-- `redis` (_only PHP 5.x, yet_)
+- `redis`
 - `zip`
 
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
 ## Composer
-[Composer](https://getcomposer.org) is installed globally in the image tagged `latest` (that is meant for CLI usage). Please, refer to their documentation for usage hints.
+[Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.
 
 ## Known issues
 - Image virtual size is over 600 MB 😞 Even though PHP official images themselves are over 450 MB, we will try to cut size down as much as we can.
