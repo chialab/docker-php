@@ -25,10 +25,11 @@ EXTENSIONS := \
 	pdo_mysql \
 	pdo_pgsql \
 	pgsql \
+	Xdebug \
 	zip
 ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
 	# Add more extensions to 5.x series images.
-	EXTENSIONS += memcached mysql redis Xdebug
+	EXTENSIONS += memcached mysql redis
 endif
 
 pull:
