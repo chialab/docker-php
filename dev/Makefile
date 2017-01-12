@@ -70,23 +70,9 @@ test:
 				exit 1; \
 			fi \
 		fi; \
-		if [[ "$${tag}" != *'-apache' ]] && [[ "$${tag}" != *'-fpm' ]]; then \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-				echo 'FAIL [Composer]'; \
-				exit 1; \
-			fi; \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} phpcs --version | grep '^PHP_CodeSniffer version [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-				echo 'FAIL [PHP_CodeSniffer]'; \
-				exit 1; \
-			fi; \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} phpmd --version | grep '^PHPMD [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-				echo 'FAIL [PHPMD]'; \
-				exit 1; \
-			fi; \
-			if [[ -z `docker run --rm $(IMAGE):$${tag} phpunit --version | grep '^PHPUnit [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-				echo 'FAIL [PHPUnit]'; \
-				exit 1; \
-			fi \
+		if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+			echo 'FAIL [Composer]'; \
+			exit 1; \
 		fi; \
 		echo 'OK'; \
 	done
