@@ -21,6 +21,7 @@ EXTENSIONS := \
 	gd \
 	mbstring \
 	mcrypt \
+	memcached \
 	mysqli \
 	pdo_mysql \
 	pdo_pgsql \
@@ -29,7 +30,7 @@ EXTENSIONS := \
 	zip
 ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
 	# Add more extensions to 5.x series images.
-	EXTENSIONS += memcached mysql
+	EXTENSIONS += mysql
 endif
 
 pull:
@@ -71,7 +72,7 @@ test:
 				exit 1; \
 			fi \
 		fi; \
-		if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+		if [[ -z `docker run --rm $(IMAGE):$${tag} composer --version 2> /dev/null | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
 			echo 'FAIL [Composer]'; \
 			exit 1; \
 		fi; \
