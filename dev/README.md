@@ -36,7 +36,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `gd`
 - `mbstring`
 - `mcrypt`
-- `memcached` (_only PHP 5.x_)
+- `memcached`
 - `mysql` (_only PHP 5.x_)
 - `mysqli`
 - `pdo_mysql`

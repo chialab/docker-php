@@ -4,7 +4,9 @@ MAINTAINER dev@chialab.it
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
         libbz2-dev \
+        libmemcached-dev \
         libmysqlclient-dev \
+        libsasl2-dev \
     " \
     runtimeDeps=" \
         curl \
@@ -13,6 +15,7 @@ RUN buildDeps=" \
         libicu-dev \
         libjpeg-dev \
         libmcrypt-dev \
+        libmemcachedutil2 \
         libpng12-dev \
         libpq-dev \
     " \
@@ -20,8 +23,8 @@ RUN buildDeps=" \
     && docker-php-ext-install bz2 calendar iconv intl mbstring mcrypt mysqli pdo_mysql pdo_pgsql pgsql zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
-    && pecl install redis \
-    && docker-php-ext-enable redis.so \
+    && pecl install memcached redis \
+    && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -r /var/lib/apt/lists/* \
     && a2enmod rewrite
