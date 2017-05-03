@@ -32,6 +32,11 @@ ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
 	EXTENSIONS += memcached mysql
 endif
 
+ifeq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
+	# Add more extensions to 7.x series images.
+	EXTENSIONS += OPcache
+endif
+
 pull:
 	@for tag in $(TAGS); do \
 		docker pull $(PARENT_IMAGE):$${tag}; \
