@@ -33,6 +33,11 @@ ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
 	EXTENSIONS += mysql
 endif
 
+# add opcache check to php version with zend opcache
+ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 latest, $(VERSION)))
+	EXTENSIONS += OPcache
+endif
+
 pull:
 	@for tag in $(TAGS); do \
 		docker pull $(PARENT_IMAGE):$${tag}; \
