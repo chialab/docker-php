@@ -32,8 +32,8 @@ ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
 	EXTENSIONS += memcached mysql
 endif
 
-ifeq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
-	# Add more extensions to 7.x series images.
+# add opcache check to php version with zend opcache
+ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 latest, $(VERSION)))
 	EXTENSIONS += OPcache
 endif
 
