@@ -22,7 +22,7 @@ before_install:
 - make -C ${DIR} pull VERSION=${VERSION}
 
 install:
-- make -C ${DIR} build-nopull VERSION=${VERSION}
+- travis_wait 30 make -C ${DIR} build-nopull VERSION=${VERSION}
 
 script:
 - make -C ${DIR} test VERSION=${VERSION}
