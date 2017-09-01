@@ -14,6 +14,7 @@ endif
 
 # Extensions.
 EXTENSIONS := \
+	bcmath \
 	bz2 \
 	calendar \
 	iconv \
@@ -27,6 +28,7 @@ EXTENSIONS := \
 	pdo_pgsql \
 	pgsql \
 	redis \
+	soap \
 	Xdebug \
 	zip
 ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))

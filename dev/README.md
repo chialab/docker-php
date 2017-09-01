@@ -29,6 +29,7 @@ As you might have guessed, all tags are built on top of the corresponding tag of
 The following modules and extensions have been enabled,
 in addition to those you can already find in the [official PHP image](https://hub.docker.com/r/_/php/):
 
+- `bcmath`
 - `bz2`
 - `calendar`
 - `iconv`
@@ -43,6 +44,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `pdo_pgsql`
 - `pgsql`
 - `redis`
+- `soap`
 - `xdebug`
 - `Zend OPcache` (_PHP 5.5+_)
 - `zip`

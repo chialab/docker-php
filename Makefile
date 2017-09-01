@@ -14,7 +14,7 @@ endif
 
 # Extensions.
 EXTENSIONS := \
-    bcmath \
+	bcmath \
 	bz2 \
 	calendar \
 	iconv \
