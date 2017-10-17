@@ -31,13 +31,12 @@ EXTENSIONS := \
 	soap \
 	Xdebug \
 	zip
-ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
+ifneq ($(VERSION),$(filter 7.0 7.1 7.2 latest, $(VERSION)))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
 endif
-
-# add opcache check to php version with zend opcache
-ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 latest, $(VERSION)))
+ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 7.2 latest, $(VERSION)))
+	# Add OPCache check to PHP version with Zend OPCache.
 	EXTENSIONS += OPcache
 endif
 
