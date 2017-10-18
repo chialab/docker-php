@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:7.2-rc-apache
 MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
