@@ -6,23 +6,27 @@ services:
   - docker
 
 env:
-  - DIR=.    VERSION=latest
-  - DIR=.    VERSION=5.4
-  - DIR=.    VERSION=5.5
-  - DIR=.    VERSION=5.6
-  - DIR=.    VERSION=7.0
-  - DIR=.    VERSION=7.1
-  - DIR=dev/ VERSION=latest
-  - DIR=dev/ VERSION=5.5
-  - DIR=dev/ VERSION=5.6
-  - DIR=dev/ VERSION=7.0
-  - DIR=dev/ VERSION=7.1
-
-before_install:
-- make -C ${DIR} pull VERSION=${VERSION}
+  - VERSION=latest
+  - VERSION=5.4 NO_DEV=1
+  - VERSION=5.4-apache NO_DEV=1
+  - VERSION=5.4-fpm NO_DEV=1
+  - VERSION=5.5
+  - VERSION=5.5-apache
+  - VERSION=5.5-fpm
+  - VERSION=5.6
+  - VERSION=5.6-apache
+  - VERSION=5.6-fpm
+  - VERSION=7.0
+  - VERSION=7.0-apache
+  - VERSION=7.0-fpm
+  - VERSION=7.1
+  - VERSION=7.1-apache
+  - VERSION=7.1-fpm
 
 install:
-- travis_wait 30 make -C ${DIR} build-nopull VERSION=${VERSION}
+- travis_wait 30 make build VERSION=${VERSION}
+- if [ "$NO_DEV" != "1" ]; then travis_wait 30 make -C dev build VERSION=${VERSION}; fi
 
 script:
-- make -C ${DIR} test VERSION=${VERSION}
+- make test VERSION=${VERSION}
+- if [ "$NO_DEV" != "1" ]; then travis_wait 30 make -C dev test VERSION=${VERSION}; fi
