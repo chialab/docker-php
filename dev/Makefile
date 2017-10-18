@@ -35,7 +35,7 @@ ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 latest, $(VERSION)))
 endif
 
 build:
-	echo " =====> Building $(IMAGE):$(VERSION)..."
+	@echo " =====> Building $(IMAGE):$(VERSION)..."
 	@dir="$(subst -,/,$(VERSION))"; \
 	if [[ "$(VERSION)" == 'latest' ]]; then \
 		dir='.'; \
@@ -43,8 +43,7 @@ build:
 	docker build --quiet -t $(IMAGE):$(VERSION) $${dir}
 
 test:
-	@echo 'Testing loaded extensions...'
-	@echo -e " - $(VERSION)... \c"
+	@echo -e "=====> Testing loaded extensions... \c"
 	@if [[ -z `docker images $(IMAGE) | grep "\s$(VERSION)\s"` ]]; then \
 		echo 'FAIL [Missing image!!!]'; \
 		exit 1; \
