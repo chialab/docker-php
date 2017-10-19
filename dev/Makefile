@@ -14,7 +14,6 @@ EXTENSIONS := \
 	intl \
 	gd \
 	mbstring \
-	mcrypt \
 	memcached \
 	mysqli \
 	pdo_mysql \
@@ -24,6 +23,10 @@ EXTENSIONS := \
 	soap \
 	Xdebug \
 	zip
+ifneq ($(VERSION),$(filter 7.2, $(VERSION)))
+	# Add more extensions to PHP < 7.2.
+	EXTENSIONS += mcrypt
+endif
 ifneq ($(VERSION),$(filter 7.0 7.1 7.2 latest, $(VERSION)))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
