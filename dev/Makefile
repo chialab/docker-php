@@ -13,6 +13,7 @@ EXTENSIONS := \
 	iconv \
 	intl \
 	gd \
+	ldap \
 	mbstring \
 	mcrypt \
 	memcached \
