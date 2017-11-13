@@ -14,12 +14,12 @@ RUN buildDeps=" \
         libfreetype6-dev \
         libicu-dev \
         libjpeg-dev \
+        libldap2-dev \
         libmcrypt-dev \
         libmemcachedutil2 \
         libpng12-dev \
         libpq-dev \
         libxml2-dev \
-		libldap2-dev \
     " \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y $buildDeps $runtimeDeps \
     && docker-php-ext-install bcmath bz2 calendar iconv intl mbstring mcrypt mysql mysqli opcache pdo_mysql pdo_pgsql pgsql soap zip \
