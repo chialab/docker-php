@@ -14,6 +14,7 @@ RUN buildDeps=" \
         libfreetype6-dev \
         libicu-dev \
         libjpeg-dev \
+        libldap2-dev \
         libmcrypt-dev \
         libmemcachedutil2 \
         libpng12-dev \
@@ -24,6 +25,8 @@ RUN buildDeps=" \
     && docker-php-ext-install bcmath bz2 calendar iconv intl mbstring mcrypt mysql mysqli pdo_mysql pdo_pgsql pgsql soap zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-install ldap \
     && pecl install memcached-2.2.0 redis \
     && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
