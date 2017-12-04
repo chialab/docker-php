@@ -23,15 +23,11 @@ EXTENSIONS := \
 	soap \
 	Xdebug \
 	zip
-ifneq ($(VERSION),$(filter 7.2, $(VERSION)))
-	# Add more extensions to PHP < 7.2.
-	EXTENSIONS += mcrypt
-endif
-ifneq ($(VERSION),$(filter 7.0 7.1 7.2 latest, $(VERSION)))
+ifneq ($(VERSION),$(filter 7.0 7.1 latest, $(VERSION)))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
 endif
-ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 7.2 latest, $(VERSION)))
+ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 latest, $(VERSION)))
 	# Add OPCache check to PHP version with Zend OPCache.
 	EXTENSIONS += OPcache
 endif

@@ -10,6 +10,7 @@ For more production-like environments, you might want to choose an [image *witho
 
 ## Available tags and `Dockerfile` links
 - [`latest` (_dev/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/Dockerfile)
+    (**NOTE**: this is actually built on top of PHP 7.1 as XDebug is not yet available for PHP 7.2!)
 - [`5.5` (_dev/5.5/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.5/Dockerfile)
 - [`5.5-apache` (_dev/5.5/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.5/apache/Dockerfile)
 - [`5.5-fpm` (_dev/5.5/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.5/fpm/Dockerfile)
@@ -22,9 +23,6 @@ For more production-like environments, you might want to choose an [image *witho
 - [`7.1` (_dev/7.1/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.1/Dockerfile)
 - [`7.1-apache` (_dev/7.1/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.1/apache/Dockerfile)
 - [`7.1-fpm` (_dev/7.1/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.1/fpm/Dockerfile)
-- [`7.2` (_dev/7.2/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/Dockerfile)
-- [`7.2-apache` (_dev/7.2/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/apache/Dockerfile)
-- [`7.2-fpm` (_dev/7.2/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/fpm/Dockerfile)
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 
