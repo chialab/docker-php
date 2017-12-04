@@ -22,7 +22,7 @@ EXTENSIONS := \
 	redis \
 	soap \
 	zip
-ifneq ($(VERSION),$(filter 7.2, $(VERSION)))
+ifneq ($(VERSION),$(filter 7.2 latest, $(VERSION)))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
 endif
