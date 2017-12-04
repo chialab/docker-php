@@ -22,6 +22,9 @@ env:
   - VERSION=7.1
   - VERSION=7.1-apache
   - VERSION=7.1-fpm
+  - VERSION=7.2 NO_DEV=1
+  - VERSION=7.2-apache NO_DEV=1
+  - VERSION=7.2-fpm NO_DEV=1
 
 install:
 - travis_wait 30 make build VERSION=${VERSION}

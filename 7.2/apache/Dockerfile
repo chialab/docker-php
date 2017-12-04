@@ -1,4 +1,4 @@
-FROM php:latest
+FROM php:7.2-apache
 MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
@@ -29,7 +29,8 @@ RUN buildDeps=" \
     && pecl install memcached redis \
     && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
-    && rm -r /var/lib/apt/lists/*
+    && rm -r /var/lib/apt/lists/* \
+    && a2enmod rewrite
 
 # Install Composer.
 ENV COMPOSER_HOME /root/composer
