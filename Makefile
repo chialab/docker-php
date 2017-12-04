@@ -4,6 +4,7 @@ SHELL := /bin/bash
 PARENT_IMAGE := php
 IMAGE := chialab/php
 VERSION ?= latest
+PHP_VERSION = $(firstword $(subst -, ,$(VERSION)))
 
 # Extensions.
 EXTENSIONS := \
@@ -22,15 +23,15 @@ EXTENSIONS := \
 	redis \
 	soap \
 	zip
-ifneq ($(VERSION),$(filter 7.2 latest, $(VERSION)))
+ifeq (,$(findstring $(PHP_VERSION), 7.2 latest))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
 endif
-ifneq ($(VERSION),$(filter 7.0 7.1 7.2 latest, $(VERSION)))
+ifeq (,$(findstring $(PHP_VERSION), 7.0 7.1 7.2 latest))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
 endif
-ifeq ($(VERSION),$(filter 5.5 5.6 7.0 7.1 7.2 latest, $(VERSION)))
+ifneq (,$(findstring $(PHP_VERSION), 5.5 5.6 7.0 7.1 7.2 latest))
 	# Add OPCache check to PHP version with Zend OPCache.
 	EXTENSIONS += OPcache
 endif
