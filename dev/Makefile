@@ -14,6 +14,7 @@ EXTENSIONS := \
 	iconv \
 	intl \
 	gd \
+	ldap \
 	mbstring \
 	memcached \
 	mysqli \
