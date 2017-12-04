@@ -1,4 +1,4 @@
-FROM php:7.2-rc-fpm
+FROM php:7.2-fpm
 MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
