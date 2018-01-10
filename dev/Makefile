@@ -25,6 +25,10 @@ EXTENSIONS := \
 	soap \
 	Xdebug \
 	zip
+ifeq (,$(findstring $(PHP_VERSION), 7.2 latest))
+	# Add more extensions to PHP < 7.2.
+	EXTENSIONS += mcrypt
+endif
 ifeq (,$(findstring $(PHP_VERSION), 7.0 7.1 7.2 latest))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
