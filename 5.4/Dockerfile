@@ -20,7 +20,6 @@ RUN buildDeps=" \
         libpng12-dev \
         libpq-dev \
         libxml2-dev \
-        php-pear \
     " \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y $buildDeps $runtimeDeps \
     && docker-php-ext-install bcmath bz2 calendar iconv intl mbstring mcrypt mysql mysqli pdo_mysql pdo_pgsql pgsql soap zip \
