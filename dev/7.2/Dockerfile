@@ -1,4 +1,4 @@
-FROM chialab/php:latest
+FROM chialab/php:7.2
 MAINTAINER dev@chialab.it
 
 # Install XDebug.
