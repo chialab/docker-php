@@ -7,9 +7,9 @@ services:
 
 env:
   - VERSION=latest
-  - VERSION=5.4 NO_DEV=1
-  - VERSION=5.4-apache NO_DEV=1
-  - VERSION=5.4-fpm NO_DEV=1
+  - VERSION=5.4
+  - VERSION=5.4-apache
+  - VERSION=5.4-fpm
   - VERSION=5.5
   - VERSION=5.5-apache
   - VERSION=5.5-fpm
