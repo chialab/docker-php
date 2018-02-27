@@ -33,6 +33,6 @@ RUN buildDeps=" \
     && rm -r /var/lib/apt/lists/*
 
 # Install Composer.
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN ln -s $(composer config --global home) /root/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && ln -s $(composer config --global home) /root/composer
 ENV PATH $PATH:/root/composer/vendor/bin
