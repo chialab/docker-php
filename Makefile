@@ -11,6 +11,7 @@ EXTENSIONS := \
 	bcmath \
 	bz2 \
 	calendar \
+	exif \
 	iconv \
 	intl \
 	gd \
