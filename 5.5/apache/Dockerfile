@@ -27,6 +27,7 @@ RUN buildDeps=" \
     && docker-php-ext-install gd \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install ldap \
+    && docker-php-ext-install exif \
     && pecl install memcached-2.2.0 redis \
     && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
