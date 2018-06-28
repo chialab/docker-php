@@ -19,6 +19,7 @@ EXTENSIONS := \
 	mbstring \
 	memcached \
 	mysqli \
+	OPcache \
 	pdo_mysql \
 	pdo_pgsql \
 	pgsql \
@@ -32,10 +33,6 @@ endif
 ifeq (,$(findstring $(PHP_VERSION), 7.0 7.1 7.2 latest))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
-endif
-ifneq (,$(findstring $(PHP_VERSION), 5.5 5.6 7.0 7.1 7.2 latest))
-	# Add OPCache check to PHP version with Zend OPCache.
-	EXTENSIONS += OPcache
 endif
 
 build:
