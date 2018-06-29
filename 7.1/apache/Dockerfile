@@ -3,9 +3,9 @@ MAINTAINER dev@chialab.it
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
+        default-libmysqlclient-dev \
         libbz2-dev \
         libmemcached-dev \
-        libmysqlclient-dev \
         libsasl2-dev \
     " \
     runtimeDeps=" \
@@ -17,7 +17,7 @@ RUN buildDeps=" \
         libldap2-dev \
         libmcrypt-dev \
         libmemcachedutil2 \
-        libpng12-dev \
+        libpng-dev \
         libpq-dev \
         libxml2-dev \
     " \
