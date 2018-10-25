@@ -1,0 +1,6 @@
+FROM chialab/php:7.3-fpm
+LABEL maintainer="dev@chialab.io"
+
+# Install XDebug.
+RUN pecl install xdebug-2.7.0beta1 \
+    && echo "zend_extension=\"$(php-config --extension-dir)/xdebug.so\"" > $PHP_INI_DIR/conf.d/xdebug.ini
