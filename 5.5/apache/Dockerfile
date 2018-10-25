@@ -1,5 +1,5 @@
 FROM php:5.5-apache
-MAINTAINER dev@chialab.it
+LABEL maintainer="dev@chialab.io"
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
@@ -37,4 +37,4 @@ RUN buildDeps=" \
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && ln -s $(composer config --global home) /root/composer
-ENV PATH $PATH:/root/composer/vendor/bin
+ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
