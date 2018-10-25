@@ -1,5 +1,5 @@
 FROM php:5.4
-MAINTAINER dev@chialab.it
+LABEL maintainer="dev@chialab.io"
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \

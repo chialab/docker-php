@@ -1,5 +1,5 @@
 FROM chialab/php:5.6
-MAINTAINER dev@chialab.it
+LABEL maintainer="dev@chialab.io"
 
 # Install XDebug.
 RUN pecl install xdebug-2.5.5 \
