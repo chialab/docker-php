@@ -1,4 +1,4 @@
-FROM php:7.3-rc-fpm
+FROM php:7.3-fpm
 LABEL maintainer="dev@chialab.io"
 
 # Install PHP extensions and PECL modules.
