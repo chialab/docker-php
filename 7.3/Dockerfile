@@ -1,4 +1,4 @@
-FROM php:latest
+FROM php:7.3
 LABEL maintainer="dev@chialab.io"
 
 # Install PHP extensions and PECL modules.

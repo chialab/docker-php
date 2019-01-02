@@ -29,6 +29,9 @@ For more production-like environments, you might want to choose an [image *witho
 - [`7.2` (_dev/7.2/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/Dockerfile)
 - [`7.2-apache` (_dev/7.2/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/apache/Dockerfile)
 - [`7.2-fpm` (_dev/7.2/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/fpm/Dockerfile)
+- [`7.3` (_dev/7.3/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/Dockerfile)
+- [`7.3-apache` (_dev/7.3/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/apache/Dockerfile)
+- [`7.3-fpm` (_dev/7.3/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/fpm/Dockerfile)
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 
@@ -45,7 +48,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `gd`
 - `ldap`
 - `mbstring`
-- `mcrypt`
+- `mcrypt` (_only PHP ≤ 7.1_)
 - `memcached`
 - `mysql` (_only PHP 5.x_)
 - `mysqli`

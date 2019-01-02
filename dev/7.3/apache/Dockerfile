@@ -1,4 +1,4 @@
-FROM chialab/php:latest
+FROM chialab/php:7.3-apache
 LABEL maintainer="dev@chialab.io"
 
 # Install XDebug.
