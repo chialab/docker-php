@@ -31,8 +31,8 @@ env:
 
 install:
 - travis_wait 30 make build VERSION=${VERSION}
-- if [ "$NO_DEV" != "1" ]; then travis_wait 30 make -C dev build VERSION=${VERSION}; fi
+- if [ "$NO_DEV" != "1" ]; then make -C dev build VERSION=${VERSION}; fi
 
 script:
 - make test VERSION=${VERSION}
-- if [ "$NO_DEV" != "1" ]; then travis_wait 30 make -C dev test VERSION=${VERSION}; fi
+- if [ "$NO_DEV" != "1" ]; then make -C dev test VERSION=${VERSION}; fi
