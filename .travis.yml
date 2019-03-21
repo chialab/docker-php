@@ -44,11 +44,11 @@ deploy:
   - provider: 'script'
     script: 'make push VERSION=${VERSION}'
     on:
-      repo: 'Chialab/docker-php'
+      repo: 'chialab/docker-php'
       branch: 'master'
   - provider: 'script'
     script: 'make -C dev push VERSION=${VERSION}'
     on:
-      repo: 'Chialab/docker-php'
+      repo: 'chialab/docker-php'
       branch: 'master'
       condition: '"$NO_DEV" != "1"'
