@@ -1,38 +1,54 @@
-sudo: required
+sudo: 'required'
 
-language: minimal
+language: 'minimal'
 
 services:
-  - docker
+  - 'docker'
 
 env:
-  - VERSION=latest
-  - VERSION=5.4
-  - VERSION=5.4-apache
-  - VERSION=5.4-fpm
-  - VERSION=5.5
-  - VERSION=5.5-apache
-  - VERSION=5.5-fpm
-  - VERSION=5.6
-  - VERSION=5.6-apache
-  - VERSION=5.6-fpm
-  - VERSION=7.0
-  - VERSION=7.0-apache
-  - VERSION=7.0-fpm
-  - VERSION=7.1
-  - VERSION=7.1-apache
-  - VERSION=7.1-fpm
-  - VERSION=7.2
-  - VERSION=7.2-apache
-  - VERSION=7.2-fpm
-  - VERSION=7.3
-  - VERSION=7.3-apache
-  - VERSION=7.3-fpm
+  - 'VERSION=latest'
+  - 'VERSION=5.4'
+  - 'VERSION=5.4-apache'
+  - 'VERSION=5.4-fpm'
+  - 'VERSION=5.5'
+  - 'VERSION=5.5-apache'
+  - 'VERSION=5.5-fpm'
+  - 'VERSION=5.6'
+  - 'VERSION=5.6-apache'
+  - 'VERSION=5.6-fpm'
+  - 'VERSION=7.0'
+  - 'VERSION=7.0-apache'
+  - 'VERSION=7.0-fpm'
+  - 'VERSION=7.1'
+  - 'VERSION=7.1-apache'
+  - 'VERSION=7.1-fpm'
+  - 'VERSION=7.2'
+  - 'VERSION=7.2-apache'
+  - 'VERSION=7.2-fpm'
+  - 'VERSION=7.3'
+  - 'VERSION=7.3-apache'
+  - 'VERSION=7.3-fpm'
 
 install:
-- travis_wait 30 make build VERSION=${VERSION}
-- if [ "$NO_DEV" != "1" ]; then make -C dev build VERSION=${VERSION}; fi
+  - 'travis_wait 30 make build VERSION=${VERSION}'
+  - '[ "$NO_DEV" = "1" ] || make -C dev build VERSION=${VERSION}'
 
 script:
-- make test VERSION=${VERSION}
-- if [ "$NO_DEV" != "1" ]; then make -C dev test VERSION=${VERSION}; fi
+  - 'make test VERSION=${VERSION}'
+  - '[ "$NO_DEV" = "1" ] || make -C dev test VERSION=${VERSION}'
+
+before_deploy:
+  - 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+
+deploy:
+  - provider: 'script'
+    script: 'make push VERSION=${VERSION}'
+    on:
+      repo: 'Chialab/docker-php'
+      branch: 'master'
+  - provider: 'script'
+    script: 'make -C dev push VERSION=${VERSION}'
+    on:
+      repo: 'Chialab/docker-php'
+      branch: 'master'
+      condition: '"$NO_DEV" != "1"'
