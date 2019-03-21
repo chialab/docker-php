@@ -1,5 +1,6 @@
 SHELL := /bin/bash
-.PHONY: pull build-nopull build test
+ALL: build
+.PHONY: build test push
 
 PARENT_IMAGE := chialab/php
 IMAGE := chialab/php-dev
@@ -42,15 +43,15 @@ build:
 	if [[ "$(VERSION)" == 'latest' ]]; then \
 		dir='.'; \
 	fi; \
-	docker build --quiet -t $(IMAGE):$(VERSION) $${dir}
+	docker image build --quiet -t $(IMAGE):$(VERSION) $${dir}
 
 test:
 	@echo -e "=====> Testing loaded extensions... \c"
-	@if [[ -z `docker images $(IMAGE) | grep "\s$(VERSION)\s"` ]]; then \
+	@if [[ -z `docker image ls $(IMAGE) | grep "\s$(VERSION)\s"` ]]; then \
 		echo 'FAIL [Missing image!!!]'; \
 		exit 1; \
 	fi
-	@modules=`docker run --rm $(IMAGE):$(VERSION) php -m`; \
+	@modules=`docker container run --rm $(IMAGE):$(VERSION) php -m`; \
 	for ext in $(EXTENSIONS); do \
 		if [[ "$${modules}" != *"$${ext}"* ]]; then \
 			echo "FAIL [$${ext}]"; \
@@ -58,14 +59,17 @@ test:
 		fi \
 	done
 	@if [[ "$(VERSION)" == *'-apache' ]]; then \
-		apache=`docker run --rm $(IMAGE):$(VERSION) apache2ctl -M 2> /dev/null`; \
+		apache=`docker container run --rm $(IMAGE):$(VERSION) apache2ctl -M 2> /dev/null`; \
 		if [[ "$${apache}" != *'rewrite_module'* ]]; then \
 			echo 'FAIL [mod_rewrite]'; \
 			exit 1; \
 		fi \
 	fi
-	@if [[ -z `docker run --rm $(IMAGE):$(VERSION) composer --version 2> /dev/null | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer --version 2> /dev/null | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
 		echo 'FAIL [Composer]'; \
 		exit 1; \
 	fi
 	@echo 'OK'
+
+push:
+	docker image push $(IMAGE):$(VERSION)
