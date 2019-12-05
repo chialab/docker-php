@@ -28,6 +28,9 @@ env:
   - 'VERSION=7.3'
   - 'VERSION=7.3-apache'
   - 'VERSION=7.3-fpm'
+  - 'VERSION=7.4'
+  - 'VERSION=7.4-apache'
+  - 'VERSION=7.4-fpm'
 
 install:
   - 'travis_wait 30 make build VERSION=${VERSION}'

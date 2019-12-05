@@ -32,6 +32,9 @@ For more production-like environments, you might want to choose an [image *witho
 - [`7.3` (_dev/7.3/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/Dockerfile)
 - [`7.3-apache` (_dev/7.3/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/apache/Dockerfile)
 - [`7.3-fpm` (_dev/7.3/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/fpm/Dockerfile)
+- [`7.4` (_dev/7.4/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.4/Dockerfile)
+- [`7.4-apache` (_dev/7.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.4/apache/Dockerfile)
+- [`7.4-fpm` (_dev/7.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.4/fpm/Dockerfile)
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 
