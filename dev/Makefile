@@ -59,7 +59,7 @@ test:
 		fi \
 	done
 	@if [[ "$(VERSION)" == *'-apache' ]]; then \
-		apache=`docker container run --rm $(IMAGE):$(VERSION) apache2ctl -M 2> /dev/null`; \
+		apache=`docker container run --rm $(IMAGE):$(VERSION) apachectl -M 2> /dev/null`; \
 		if [[ "$${apache}" != *'rewrite_module'* ]]; then \
 			echo 'FAIL [mod_rewrite]'; \
 			exit 1; \

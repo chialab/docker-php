@@ -16,6 +16,9 @@ env:
   - 'VERSION=5.6'
   - 'VERSION=5.6-apache'
   - 'VERSION=5.6-fpm'
+  - 'VERSION=5.6-alpine'
+  - 'VERSION=5.6-alpine-apache'
+  - 'VERSION=5.6-alpine-fpm'
   - 'VERSION=7.0'
   - 'VERSION=7.0-apache'
   - 'VERSION=7.0-fpm'
@@ -28,6 +31,9 @@ env:
   - 'VERSION=7.3'
   - 'VERSION=7.3-apache'
   - 'VERSION=7.3-fpm'
+  - 'VERSION=7.3-alpine'
+  - 'VERSION=7.3-alpine-apache'
+  - 'VERSION=7.3-alpine-fpm'
 
 install:
   - 'travis_wait 30 make build VERSION=${VERSION}'

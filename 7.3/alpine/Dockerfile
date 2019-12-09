@@ -1,0 +1,58 @@
+FROM php:7.3-alpine
+LABEL maintainer="dev@chialab.io"
+
+# Install PHP extensions and PECL modules.
+RUN buildDeps=" \
+      bzip2-dev \
+      icu-dev \
+      postgresql-dev \
+      openldap-dev \
+      libmemcached-dev \
+    " \
+    runtimeDeps=" \
+      freetype-dev \
+      libldap \
+      icu-libs \
+      libbz2 \
+      libpng-dev \
+      libjpeg-turbo-dev \
+      libmemcached-libs \
+      libpq \
+      libzip \
+      libxml2-dev \
+      libzip-dev \
+    " \
+    && apk add --no-cache --virtual .build-deps $buildDeps \
+    && apk add --no-cache $runtimeDeps \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && apk add --no-cache ca-certificates \
+    && docker-php-ext-install \
+        bcmath \
+        bz2 \
+        calendar \
+        exif \
+        iconv \
+        intl \
+        mbstring \
+        mysqli \
+        opcache \
+        pdo_mysql \
+        pdo_pgsql \
+        soap \
+        zip \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install \
+        gd \
+        ldap \
+    && pecl install \
+        memcached \
+        redis \
+    && docker-php-ext-enable \
+        memcached \
+        redis \
+    && apk del .build-deps .phpize-deps
+
+# Install Composer.
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && ln -s $(composer config --global home) /root/composer
+ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
