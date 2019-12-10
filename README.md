@@ -31,6 +31,9 @@ For development environments, you might want to choose an [image with XDebug ins
 - [`7.3` (_7.3/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.3/Dockerfile)
 - [`7.3-apache` (_7.3/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.3/apache/Dockerfile)
 - [`7.3-fpm` (_7.3/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.3/fpm/Dockerfile)
+- [`7.4` (_7.4/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.4/Dockerfile)
+- [`7.4-apache` (_7.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.4/apache/Dockerfile)
+- [`7.4-fpm` (_7.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/7.4/fpm/Dockerfile)
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 
