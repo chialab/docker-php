@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/Chialab/docker-php.svg?branch=master)](https://travis-ci.org/Chialab/docker-php)
 [![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php-dev.svg)](https://hub.docker.com/r/chialab/php-dev/)
 
-Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, and are meant for *debugging purposes*. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php-dev/) (and if you're reading this file, you're probably already there).
+Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer), and are meant for *debugging purposes*. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php-dev/) (and if you're reading this file, you're probably already there).
 
 An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/Chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
@@ -10,7 +10,6 @@ For more production-like environments, you might want to choose an [image *witho
 
 ## Available tags and `Dockerfile` links
 - [`latest` (_dev/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/Dockerfile)
-    (**NOTE**: this is actually built on top of PHP 7.1 as XDebug is not yet available for PHP 7.2!)
 - [`5.4` (_dev/5.4/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.4/Dockerfile)
 - [`5.4-apache` (_dev/5.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.4/apache/Dockerfile)
 - [`5.4-fpm` (_dev/5.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.4/fpm/Dockerfile)
@@ -60,6 +59,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `pgsql`
 - `redis`
 - `soap`
+- `xsl`
 - `xdebug`
 - `Zend OPcache`
 - `zip`
@@ -87,9 +87,6 @@ To enable debugging, additional parameters must be passed to the FastCGI PHP int
 ```
 fastcgi_param PHP_VALUE "xdebug.remote_enable=1\nxdebug.remote_host=192.168.99.1";
 ```
-
-## Known issues
-- Image virtual size is over 600 MB 😞 Even though PHP official images themselves are over 450 MB, we will try to cut size down as much as we can.
 
 ## Contributing
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).

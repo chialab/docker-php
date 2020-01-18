@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/Chialab/docker-php.svg?branch=master)](https://travis-ci.org/Chialab/docker-php)
 [![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php.svg)](https://hub.docker.com/r/chialab/php/)
 
-Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
+Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer). You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
 
 An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/Chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
@@ -67,9 +67,6 @@ You will probably not need all this stuff. Even if having some extra extensions 
 
 ## Composer
 [Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.
-
-## Known issues
-- Image virtual size is over 600 MB 😞 Even though PHP official images themselves are over 450 MB, we will try to cut size down as much as we can.
 
 ## Contributing
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
