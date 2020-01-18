@@ -27,6 +27,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       pgsql \
       redis \
       soap \
+      xsl \
       zip \
 # already installed:
 #      iconv \

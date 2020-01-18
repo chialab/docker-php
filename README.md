@@ -59,6 +59,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `pgsql`
 - `redis`
 - `soap`
+- `xsl`
 - `Zend OPcache`
 - `zip`
 
