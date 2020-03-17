@@ -28,7 +28,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       redis \
       soap \
       xsl \
-      zip
+      zip \
+      sockets
 # already installed:
 #      iconv \
 #      mbstring \

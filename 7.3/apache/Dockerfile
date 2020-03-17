@@ -28,6 +28,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       soap \
       xsl \
       zip \
+      sockets \
 # already installed:
 #      iconv \
 #      mbstring \

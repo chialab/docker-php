@@ -62,6 +62,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `xsl`
 - `Zend OPcache`
 - `zip`
+- `sockets`
 
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
