@@ -1,6 +1,22 @@
-# Docker PHP images
-[![Build Status](https://travis-ci.org/Chialab/docker-php.svg?branch=master)](https://travis-ci.org/Chialab/docker-php)
-[![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php.svg)](https://hub.docker.com/r/chialab/php/)
+<p align="center">
+    <a href="https://www.chialab.io/p/docker-php">
+        <img alt="Docker PHP Images logo" width="144" height="144" src="https://raw.githack.com/chialab/docker-php/master/logo.svg" />
+    </a>
+</p>
+
+<p align="center">
+  <strong>Docker PHP images</strong>
+</p>
+
+<p align="center">
+    <a href="https://travis-ci.org/chialab/docker-php"><img alt="Build Status" src="https://img.shields.io/travis/chialab/docker-php/master.svg?style=flat-square"></a>
+    <a href="https://github.com/chialab/docker-php"><img alt="Source link" src="https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square"></a>
+    <a href="https://www.chialab.it"><img alt="Authors link" src="https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square"></a>
+    <a href="https://hub.docker.com/r/chialab/php/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php.svg?style=flat-square"></a>
+    <a href="https://github.com/chialab/docker-php/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square"></a>
+</p>
+
+---
 
 Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer). You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
 
@@ -72,3 +88,9 @@ You will probably not need all this stuff. Even if having some extra extensions 
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
 
 Pull requests are welcome, too! 😁 Please, run `make build` and `make test` before attempting a pull request. Also, it would be nice if you could stick to the [best practices for writing Dockerfiles](https://docs.docker.com/articles/dockerfile_best-practices/).
+
+---
+
+## License
+
+Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/master/LICENSE) license.
