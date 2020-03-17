@@ -11,6 +11,7 @@ RUN buildDeps=" \
     runtimeDeps=" \
         curl \
         git \
+        zip unzip \
         libfreetype6-dev \
         libicu-dev \
         libjpeg-dev \

@@ -10,6 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
       curl \
       git \
+      zip unzip \
     && install-php-extensions \
       bcmath \
       bz2 \
