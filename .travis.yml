@@ -1,36 +1,61 @@
-sudo: 'required'
-
-language: 'minimal'
+os: linux
+dist: bionic
+language: shell
 
 services:
-  - 'docker'
+  - docker
+
+git:
+  depth: 5
+  quiet: true
 
 env:
-  - 'VERSION=latest'
-  - 'VERSION=5.4'
-  - 'VERSION=5.4-apache'
-  - 'VERSION=5.4-fpm'
-  - 'VERSION=5.5'
-  - 'VERSION=5.5-apache'
-  - 'VERSION=5.5-fpm'
-  - 'VERSION=5.6'
-  - 'VERSION=5.6-apache'
-  - 'VERSION=5.6-fpm'
-  - 'VERSION=7.0'
-  - 'VERSION=7.0-apache'
-  - 'VERSION=7.0-fpm'
-  - 'VERSION=7.1'
-  - 'VERSION=7.1-apache'
-  - 'VERSION=7.1-fpm'
-  - 'VERSION=7.2'
-  - 'VERSION=7.2-apache'
-  - 'VERSION=7.2-fpm'
-  - 'VERSION=7.3'
-  - 'VERSION=7.3-apache'
-  - 'VERSION=7.3-fpm'
-  - 'VERSION=7.4'
-  - 'VERSION=7.4-apache'
-  - 'VERSION=7.4-fpm'
+  global:
+    # Enable Docker BuildKit - https://docs.docker.com/develop/develop-images/build_enhancements/
+    # - DOCKER_BUILDKIT=1
+  jobs:
+    - VERSION=latest
+    - VERSION=5.4
+    - VERSION=5.4-apache
+    - VERSION=5.4-fpm
+    - VERSION=5.5
+    - VERSION=5.5-apache
+    - VERSION=5.5-fpm
+    - VERSION=5.6
+    - VERSION=5.6-apache
+    - VERSION=5.6-fpm
+    - VERSION=7.0
+    - VERSION=7.0-apache
+    - VERSION=7.0-fpm
+    - VERSION=7.1
+    - VERSION=7.1-apache
+    - VERSION=7.1-fpm
+    - VERSION=7.2
+    - VERSION=7.2-apache
+    - VERSION=7.2-fpm
+    - VERSION=7.3
+    - VERSION=7.3-apache
+    - VERSION=7.3-fpm
+    - VERSION=7.4
+    - VERSION=7.4-apache
+    - VERSION=7.4-fpm
+
+cache:
+  directories:
+  - docker_images
+
+before_install:
+  # Update Docker to newest version - https://docs.travis-ci.com/user/docker/#installing-a-newer-docker-version
+  # - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  # - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  # - sudo apt-get update
+  # - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  # - docker -v
+  # Load cached Docker images
+  - docker load -i docker_images/images.tar || true
+
+before_cache:
+  - mkdir -p docker_images && docker save -o docker_images/images.tar $(docker images -a -q)
 
 install:
   - 'travis_wait 30 make build VERSION=${VERSION}'
