@@ -70,6 +70,10 @@ test:
 		echo 'FAIL [Composer]'; \
 		exit 1; \
 	fi
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer global show 2> /dev/null | grep '^hirak/prestissimo [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+		echo 'FAIL [Composer plugin - prestissimo]'; \
+		exit 1; \
+	fi
 	@echo 'OK'
 
 push:
