@@ -67,7 +67,8 @@ in addition to those you can already find in the [official PHP image](https://hu
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases (especially in a development environment), you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
 ## Composer
-[Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.
+[Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.  
+[Prestissimo (composer plugin)](https://github.com/hirak/prestissimo) is installed globally in all images. Plugin that downloads packages in parallel to speed up the installation process of Composer packages.
 
 ## Configuring XDebug
 XDebug is installed, but not yet configured.

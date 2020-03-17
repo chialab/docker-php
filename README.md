@@ -83,7 +83,9 @@ in addition to those you can already find in the [official PHP image](https://hu
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
 ## Composer
-[Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.
+[Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.  
+[Prestissimo (composer plugin)](https://github.com/hirak/prestissimo) is installed globally in all images. Plugin that downloads packages in parallel to speed up the installation process of Composer packages.
+
 
 ## Contributing
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
