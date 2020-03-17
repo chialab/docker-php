@@ -27,7 +27,8 @@ EXTENSIONS := \
 	redis \
 	soap \
 	Xdebug \
-	zip
+	zip \
+	sockets
 ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 latest))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
