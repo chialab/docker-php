@@ -31,7 +31,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       soap \
       xsl \
       zip \
-      sockets
+      sockets \
+      pdo_sqlsrv \
+      sqlsrv
 # already installed:
 #      iconv \
 #      mbstring \
