@@ -72,6 +72,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `mysqli`
 - `pdo_mysql`
 - `pdo_pgsql`
+- `pdo_sqlsrv` (_only PHP ≥ 7.0_)
 - `pgsql`
 - `redis`
 - `soap`
@@ -79,6 +80,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `Zend OPcache`
 - `zip`
 - `sockets`
+- `sqlsrv` (_only PHP ≥ 7.0_)
 
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
