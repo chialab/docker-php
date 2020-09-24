@@ -43,3 +43,8 @@ ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
 # After release of Composer 2.x, remove prestissimo, because parallelism already merged into Composer 2.x branch:
 # https://github.com/composer/composer/pull/7904
 RUN composer global require hirak/prestissimo
+
+RUN composer global require laravel/installer && \
+      curl -sS https://get.symfony.com/cli/installer | bash && \
+      mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+

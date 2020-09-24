@@ -87,6 +87,11 @@ You will probably not need all this stuff. Even if having some extra extensions 
 [Prestissimo (composer plugin)](https://github.com/hirak/prestissimo) is installed globally in all images. Plugin that downloads packages in parallel to speed up the installation process of Composer packages.
 
 
+## Framework Binaries
+[Laravel](https://laravel.com/docs/8.x/installation#installing-laravel) and [Symfony](https://symfony.com/download) binaries are installed globally in all images _(laravel/instalar only PHP > 5.4)_. 
+
+
+
 ## Contributing
 If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
 

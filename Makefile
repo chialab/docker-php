@@ -44,7 +44,7 @@ build:
 	if [[ "$(VERSION)" == 'latest' ]]; then \
 		dir='.'; \
 	fi; \
-	docker image build --quiet -t $(IMAGE):$(VERSION) $${dir}
+	docker image build -t $(IMAGE):$(VERSION) $${dir}
 
 test:
 	@echo -e "=====> Testing loaded extensions... \c"
@@ -70,8 +70,16 @@ test:
 		echo 'FAIL [Composer]'; \
 		exit 1; \
 	fi
-	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer global show 2> /dev/null | grep '^hirak/prestissimo [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer global show 2> /dev/null | grep '^hirak/prestissimo\s*[0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
 		echo 'FAIL [Composer plugin - prestissimo]'; \
+		exit 1; \
+	fi
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) symfony 2> /dev/null | grep '^Symfony CLI version v[0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+		echo 'FAIL [Framework CLI - Symfony]'; \
+		exit 1; \
+	fi
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) laravel --version 2> /dev/null | grep '^Laravel Installer [0-9][0-9]*\.[0-9][0-9]*'` && "$(VERSION)" != '5.4'* ]]; then \
+		echo 'FAIL [Framework CLI - Laravel]'; \
 		exit 1; \
 	fi
 	@echo 'OK'
