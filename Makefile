@@ -28,9 +28,7 @@ EXTENSIONS := \
 	soap \
 	xsl \
 	zip \
-    sockets \
-    pdo_sqlsrv \
-    sqlsrv
+	sockets
 ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 latest))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
@@ -38,6 +36,9 @@ endif
 ifeq (,$(findstring $(PHP_VERSION), 7.0 7.1 7.2 7.3 7.4 latest))
 	# Add more extensions to 5.x series images.
 	EXTENSIONS += mysql
+else
+	EXTENSIONS += pdo_sqlsrv \
+	   	sqlsrv
 endif
 
 build:
