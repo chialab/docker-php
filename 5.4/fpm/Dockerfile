@@ -36,11 +36,22 @@ RUN buildDeps=" \
     && rm -r /var/lib/apt/lists/*
 
 # Install Composer.
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && ln -s $(composer config --global home) /root/composer
-ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
-
-# Install prestissimo (composer plugin). Plugin that downloads packages in parallel to speed up the installation process
-# After release of Composer 2.x, remove prestissimo, because parallelism already merged into Composer 2.x branch:
-# https://github.com/composer/composer/pull/7904
-RUN composer global require hirak/prestissimo
+ENV PATH=$PATH:/root/composer2/vendor/bin:/root/composer1/vendor/bin \
+  COMPOSER_ALLOW_SUPERUSER=1 \
+  COMPOSER_HOME=/root/composer2 \
+  COMPOSER1_HOME=/root/composer1
+RUN cd /opt \
+  # Download installer and check for its integrity.
+  && curl -sSL https://getcomposer.org/installer > composer-setup.php \
+  && curl -sSL https://composer.github.io/installer.sha384sum > composer-setup.sha384sum \
+  && sha384sum --check composer-setup.sha384sum \
+  # Install Composer 2 and expose `composer` as a symlink to it.
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer2 --2 \
+  && ln -s /usr/local/bin/composer2 /usr/local/bin/composer \
+  # Install Composer 1, make it point to a different `$COMPOSER_HOME` directory than Composer 2, install `hirak/prestissimo` plugin.
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=.composer1 --1 \
+  && printf "#!/bin/sh\nCOMPOSER_HOME=\$COMPOSER1_HOME\nexec /usr/local/bin/.composer1 \$@" > /usr/local/bin/composer1 \
+  && chmod 755 /usr/local/bin/composer1 \
+  && composer1 global require hirak/prestissimo \
+  # Remove installer files.
+  && rm /opt/composer-setup.php /opt/composer-setup.sha384sum
