@@ -1,6 +1,7 @@
-sudo: 'required'
+os: 'linux'
+dist: 'focal'
 
-language: 'minimal'
+language: 'shell'
 
 services:
   - 'docker'

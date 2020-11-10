@@ -69,12 +69,20 @@ test:
 			exit 1; \
 		fi \
 	fi
-	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer --version 2> /dev/null | grep '^Composer version [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-		echo 'FAIL [Composer]'; \
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer --version 2> /dev/null | grep '^Composer version 2\.[0-9][0-9]*'` ]]; then \
+		echo 'FAIL [Composer 2]'; \
 		exit 1; \
 	fi
-	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer global show 2> /dev/null | grep '^hirak/prestissimo [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
-		echo 'FAIL [Composer plugin - prestissimo]'; \
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer2 --version 2> /dev/null | grep '^Composer version 2\.[0-9][0-9]*'` ]]; then \
+		echo 'FAIL [Composer 2]'; \
+		exit 1; \
+	fi
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer1 --version 2> /dev/null | grep '^Composer version 1\.[0-9][0-9]*'` ]]; then \
+		echo 'FAIL [Composer 1]'; \
+		exit 1; \
+	fi
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer1 global show 2> /dev/null | grep '^hirak/prestissimo [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+		echo 'FAIL [Composer 1 plugin - prestissimo]'; \
 		exit 1; \
 	fi
 	@echo 'OK'
