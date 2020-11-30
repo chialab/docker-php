@@ -8,11 +8,21 @@ on:
     types: [opened, synchronize]
 
 jobs:
+  
+  cancel-previous-runs:
+    name: Cancel previous runs
+    runs-on: ubuntu-20.04
+    if: "!contains(github.event.commits[0].message, 'skip ci')"
+    steps:
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
 
   build-test-push:
     name: Build, test and publish
     runs-on: ubuntu-20.04
     if: "!contains(github.event.commits[0].message, 'skip ci')"
+    needs: cancel-previous-runs
     strategy:
       matrix:
         version: [ '5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4' ]
@@ -21,11 +31,6 @@ jobs:
           - version: 'latest'
             flavor: ''
     steps:
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.6.0
-        with:
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v2
 
       - name: Build images
