@@ -21,6 +21,11 @@ jobs:
           - version: 'latest'
             flavor: ''
     steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - name: Build images
