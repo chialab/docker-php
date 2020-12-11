@@ -32,6 +32,9 @@ env:
   - 'VERSION=7.4'
   - 'VERSION=7.4-apache'
   - 'VERSION=7.4-fpm'
+  - 'VERSION=8.0'
+  - 'VERSION=8.0-apache'
+  - 'VERSION=8.0-fpm'
 
 install:
   - 'travis_wait 30 make build VERSION=${VERSION}'
