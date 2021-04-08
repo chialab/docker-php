@@ -30,6 +30,8 @@ jobs:
         include:
           - version: 'latest'
             flavor: ''
+    env:
+      VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
     steps:
       - uses: actions/checkout@v2
 
@@ -37,15 +39,11 @@ jobs:
         run: |
           make build VERSION=${VERSION}
           make -C dev build VERSION=${VERSION}
-        env:
-          VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
 
       - name: Test images
         run: |
           make test VERSION=${VERSION}
           make -C dev test VERSION=${VERSION}
-        env:
-          VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
 
       - name: Login to Docker HUB
         if: "github.event_name != 'pull_request'"
@@ -59,5 +57,3 @@ jobs:
         run: |
           make push VERSION=${VERSION}
           make -C dev push VERSION=${VERSION}
-        env:
-          VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
