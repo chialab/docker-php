@@ -53,6 +53,5 @@ RUN cd /opt \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=.composer1 --1 \
   && printf "#!/bin/sh\nCOMPOSER_HOME=\$COMPOSER1_HOME\nexec /usr/local/bin/.composer1 \$@" > /usr/local/bin/composer1 \
   && chmod 755 /usr/local/bin/composer1 \
-  && composer1 global require hirak/prestissimo \
   # Remove installer files.
   && rm /opt/composer-setup.php /opt/composer-setup.sha384sum
