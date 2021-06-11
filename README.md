@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-    <a href="https://travis-ci.org/chialab/docker-php"><img alt="Build Status" src="https://img.shields.io/travis/chialab/docker-php/master.svg?style=flat-square"></a>
+    <a href="https://github.com/chialab/docker-php/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/chialab/docker-php/Build,%20test%20and%20publish%20images?style=flat-square"></a>
     <a href="https://github.com/chialab/docker-php"><img alt="Source link" src="https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square"></a>
     <a href="https://www.chialab.it"><img alt="Authors link" src="https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square"></a>
     <a href="https://hub.docker.com/r/chialab/php/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php.svg?style=flat-square"></a>
