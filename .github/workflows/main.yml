@@ -55,7 +55,7 @@ jobs:
 
       - name: Test images
         env:
-          VERSION: "${{ matrix.version }}${{ matrix.flavor }}"
+          VERSION: ${{ steps.prepare-path-tag.outputs.image-tag }}
         run: |
           make test VERSION=${VERSION}
           make -C dev test VERSION=${VERSION}
