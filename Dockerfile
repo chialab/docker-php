@@ -1,4 +1,5 @@
-FROM php:latest
+ARG BASE_IMAGE=latest
+FROM php:${BASE_IMAGE}
 LABEL maintainer="dev@chialab.io"
 
 # Download script to install PHP extensions and dependencies
@@ -11,7 +12,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       curl \
       git \
       zip unzip \
-    && install-php-extensions \
+# iconv, mbstring and pdo_sqlite are omitted as they are already installed
+    && PHP_EXTENSIONS=" \
       bcmath \
       bz2 \
       calendar \
@@ -27,12 +29,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       pgsql \
       redis \
       soap \
+      sockets \
       xsl \
       zip \
-      sockets
-# already installed:
-#      iconv \
-#      mbstring \
+    " \
+    && case "$PHP_VERSION" in \
+      5.6.*) PHP_EXTENSIONS="$PHP_EXTENSIONS mcrypt mysql";; \
+      7.0.*|7.1.*) PHP_EXTENSIONS="$PHP_EXTENSIONS mcrypt";; \
+    esac \
+    && install-php-extensions $PHP_EXTENSIONS \
+    && if command -v a2enmod; then a2enmod rewrite; fi
 
 # Install Composer.
 ENV PATH=$PATH:/root/composer2/vendor/bin:/root/composer1/vendor/bin \
