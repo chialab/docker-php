@@ -16,18 +16,12 @@ jobs:
     strategy:
       matrix:
         version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0' ]
-        flavor: [ '', 'apache', 'fpm' ]
+        flavor: [ '', '-apache', '-fpm' ]
         include:
           - version: 'latest'
             flavor: ''
     steps:
       - uses: actions/checkout@v2
-
-      - name: Prepare context path and image tag
-        id: prepare-path-tag
-        run: |
-          echo "::set-output name=context-path::${{ matrix.version != 'latest' && matrix.version || '' }}${{ matrix.flavor != '' && format('/{0}', matrix.flavor) || '' }}"
-          echo "::set-output name=image-tag::${{ matrix.version }}${{ matrix.flavor != '' && format('-{0}', matrix.flavor) || '' }}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -38,24 +32,28 @@ jobs:
       - name: Build image for testing
         uses: docker/build-push-action@v2
         with:
-          cache-from: type=registry,ref=chialab/php:${{ steps.prepare-path-tag.outputs.image-tag }}
+          cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
-          context: ./${{ steps.prepare-path-tag.outputs.context-path }}
-          tags: chialab/php:${{ steps.prepare-path-tag.outputs.image-tag }}
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
+          tags: chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           load: true
 
       - name: Build dev image for testing
         uses: docker/build-push-action@v2
         with:
-          cache-from: type=registry,ref=chialab/php-dev:${{ steps.prepare-path-tag.outputs.image-tag }}
+          cache-from: type=registry,ref=chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
-          context: ./dev/${{ steps.prepare-path-tag.outputs.context-path }}
-          tags: chialab/php-dev:${{ steps.prepare-path-tag.outputs.image-tag }}
+          context: ./dev
+          build-args: |
+            BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
+          tags: chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           load: true
 
       - name: Test images
         env:
-          VERSION: ${{ steps.prepare-path-tag.outputs.image-tag }}
+          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: |
           make test VERSION=${VERSION}
           make -C dev test VERSION=${VERSION}
@@ -72,10 +70,10 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=chialab/php:${{ steps.prepare-path-tag.outputs.image-tag }}
+          cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
-          context: ./${{ steps.prepare-path-tag.outputs.context-path }}
-          tags: chialab/php:${{ steps.prepare-path-tag.outputs.image-tag }}
+          context: .
+          tags: chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
       - name: Build dev image and push to registry
@@ -83,8 +81,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=chialab/php-dev:${{ steps.prepare-path-tag.outputs.image-tag }}
+          cache-from: type=registry,ref=chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
-          context: ./dev/${{ steps.prepare-path-tag.outputs.context-path }}
-          tags: chialab/php-dev:${{ steps.prepare-path-tag.outputs.image-tag }}
+          context: ./dev
+          tags: chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           push: true
