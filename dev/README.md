@@ -10,12 +10,6 @@ For more production-like environments, you might want to choose an [image *witho
 
 ## Available tags and `Dockerfile` links
 - [`latest` (_dev/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/Dockerfile)
-- [`5.4` (_dev/5.4/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.4/Dockerfile)
-- [`5.4-apache` (_dev/5.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.4/apache/Dockerfile)
-- [`5.4-fpm` (_dev/5.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.4/fpm/Dockerfile)
-- [`5.5` (_dev/5.5/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.5/Dockerfile)
-- [`5.5-apache` (_dev/5.5/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.5/apache/Dockerfile)
-- [`5.5-fpm` (_dev/5.5/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.5/fpm/Dockerfile)
 - [`5.6` (_dev/5.6/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.6/Dockerfile)
 - [`5.6-apache` (_dev/5.6/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.6/apache/Dockerfile)
 - [`5.6-fpm` (_dev/5.6/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.6/fpm/Dockerfile)

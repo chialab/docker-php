@@ -26,12 +26,6 @@ For development environments, you might want to choose an [image with XDebug ins
 
 ## Available tags and `Dockerfile` links
 - [`latest` (_Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/Dockerfile)
-- [`5.4` (_5.4/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.4/Dockerfile)
-- [`5.4-apache` (_5.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.4/apache/Dockerfile)
-- [`5.4-fpm` (_5.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.4/fpm/Dockerfile)
-- [`5.5` (_5.5/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.5/Dockerfile)
-- [`5.5-apache` (_5.5/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.5/apache/Dockerfile)
-- [`5.5-fpm` (_5.5/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.5/fpm/Dockerfile)
 - [`5.6` (_5.6/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.6/Dockerfile)
 - [`5.6-apache` (_5.6/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.6/apache/Dockerfile)
 - [`5.6-fpm` (_5.6/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/5.6/fpm/Dockerfile)
