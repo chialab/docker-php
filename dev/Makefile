@@ -50,7 +50,7 @@ test:
 		exit 1; \
 	fi
 	@IMAGE_PHP_VERSION=`docker container run --rm $(IMAGE):$(VERSION) bash -c '/bin/echo $$PHP_VERSION' | cut -d '.' -f 1,2`; \
-	if [[ "$${IMAGE_PHP_VERSION}" != "$(PHP_VERSION)" ]]; then \
+	if [[ "$(PHP_VERSION)" != "latest" && "$${IMAGE_PHP_VERSION}" != "$(PHP_VERSION)" ]]; then \
 		echo "FAIL [wrong PHP version: expected $(PHP_VERSION), got $${IMAGE_PHP_VERSION}]"; \
 		exit 1; \
 	fi
