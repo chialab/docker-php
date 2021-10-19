@@ -8,26 +8,26 @@ An automated build is set up, so they should be always up-to-date with the Docke
 
 For more production-like environments, you might want to choose an [image *without* XDebug installed](https://hub.docker.com/r/chialab/php/), instead.
 
-## Available tags and `Dockerfile` links
-- [`latest` (_dev/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/Dockerfile)
-- [`5.6` (_dev/5.6/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.6/Dockerfile)
-- [`5.6-apache` (_dev/5.6/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.6/apache/Dockerfile)
-- [`5.6-fpm` (_dev/5.6/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/5.6/fpm/Dockerfile)
-- [`7.0` (_dev/7.0/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.0/Dockerfile)
-- [`7.0-apache` (_dev/7.0/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.0/apache/Dockerfile)
-- [`7.0-fpm` (_dev/7.0/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.0/fpm/Dockerfile)
-- [`7.1` (_dev/7.1/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.1/Dockerfile)
-- [`7.1-apache` (_dev/7.1/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.1/apache/Dockerfile)
-- [`7.1-fpm` (_dev/7.1/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.1/fpm/Dockerfile)
-- [`7.2` (_dev/7.2/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/Dockerfile)
-- [`7.2-apache` (_dev/7.2/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/apache/Dockerfile)
-- [`7.2-fpm` (_dev/7.2/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.2/fpm/Dockerfile)
-- [`7.3` (_dev/7.3/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/Dockerfile)
-- [`7.3-apache` (_dev/7.3/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/apache/Dockerfile)
-- [`7.3-fpm` (_dev/7.3/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.3/fpm/Dockerfile)
-- [`7.4` (_dev/7.4/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.4/Dockerfile)
-- [`7.4-apache` (_dev/7.4/apache/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.4/apache/Dockerfile)
-- [`7.4-fpm` (_dev/7.4/fpm/Dockerfile_)](https://github.com/Chialab/docker-php/blob/master/dev/7.4/fpm/Dockerfile)
+## Available tags
+- `latest`
+- `5.6`
+- `5.6-apache`
+- `5.6-fpm`
+- `7.0`
+- `7.0-apache`
+- `7.0-fpm`
+- `7.1`
+- `7.1-apache`
+- `7.1-fpm`
+- `7.2`
+- `7.2-apache`
+- `7.2-fpm`
+- `7.3`
+- `7.3-apache`
+- `7.3-fpm`
+- `7.4`
+- `7.4-apache`
+- `7.4-fpm`
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
 

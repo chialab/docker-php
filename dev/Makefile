@@ -41,11 +41,7 @@ endif
 
 build:
 	@echo " =====> Building $(IMAGE):$(VERSION)..."
-	@dir="$(subst -,/,$(VERSION))"; \
-	if [[ "$(VERSION)" == 'latest' ]]; then \
-		dir='.'; \
-	fi; \
-	docker image build --quiet -t $(IMAGE):$(VERSION) $${dir}
+	docker image build --quiet --build-arg 'BASE_IMAGE=$(VERSION)' -t $(IMAGE):$(VERSION) .
 
 test:
 	@echo -e "=====> Testing loaded extensions... \c"
