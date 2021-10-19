@@ -78,7 +78,7 @@ test:
 		echo 'FAIL [Composer 1]'; \
 		exit 1; \
 	fi
-	@if [[ "$(PHP_VERSION)" != "5.4" && "$(PHP_VERSION)" != "5.5" && -z `docker container run --rm $(IMAGE):$(VERSION) composer1 global show 2> /dev/null | grep '^hirak/prestissimo [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
+	@if [[ -z `docker container run --rm $(IMAGE):$(VERSION) composer1 global show 2> /dev/null | grep '^hirak/prestissimo [0-9][0-9]*\.[0-9][0-9]*'` ]]; then \
 		echo 'FAIL [Composer 1 plugin - prestissimo]'; \
 		exit 1; \
 	fi
