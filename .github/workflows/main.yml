@@ -55,7 +55,7 @@ jobs:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: |
           make test VERSION=${VERSION}
-          make -C dev test VERSION=${VERSION}
+#         make -C dev test VERSION=${VERSION}
 
       - name: Login to DockerHub
         if: "github.event_name != 'pull_request'"
