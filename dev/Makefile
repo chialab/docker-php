@@ -49,6 +49,11 @@ test:
 		echo 'FAIL [Missing image!!!]'; \
 		exit 1; \
 	fi
+	@IMAGE_PHP_VERSION=`docker container run --rm $(IMAGE):$(VERSION) bash -c '/bin/echo $$PHP_VERSION' | cut -d '.' -f 1,2`; \
+	if [[ "$${IMAGE_PHP_VERSION}" != "$(PHP_VERSION)" ]]; then \
+		echo "FAIL [wrong PHP version: expected $(PHP_VERSION), got $${IMAGE_PHP_VERSION}]"; \
+		exit 1; \
+	fi
 	@modules=`docker container run --rm $(IMAGE):$(VERSION) php -m`; \
 	for ext in $(EXTENSIONS); do \
 		if [[ "$${modules}" != *"$${ext}"* ]]; then \
