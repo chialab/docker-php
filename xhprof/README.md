@@ -99,8 +99,7 @@ php_value xhprof.output_dir /home/me/xhprof
 Parameters must be passed to the FastCGI PHP interpreter via `fastcgi_param`, e.g.:
 
 ```
-fastcgi_param PHP_VALUE "xhprof.output_dir=/home/me/xhprof";c
-
+fastcgi_param PHP_VALUE "xhprof.output_dir=/home/me/xhprof";
 ```
 
 ## Contributing
