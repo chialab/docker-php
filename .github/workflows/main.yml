@@ -66,6 +66,7 @@ jobs:
         run: |
           make test VERSION=${VERSION}
 #         make -C dev test VERSION=${VERSION}
+#         make -C xhprof test VERSION=${VERSION}
 
       - name: Login to DockerHub
         if: "github.event_name != 'pull_request'"
@@ -99,11 +100,10 @@ jobs:
           tags: chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
-      - name: Build xhprof image and push to registry
+      - name: Build xhprof image (amd64 only) and push to registry
         if: "github.event_name != 'pull_request'"
         uses: docker/build-push-action@v2
         with:
-          platforms: linux/amd64,linux/arm64
           cache-to: type=inline
           context: ./xhprof
           build-args: |
