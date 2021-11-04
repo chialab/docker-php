@@ -3,7 +3,7 @@ ALL: build
 .PHONY: build test push
 
 PARENT_IMAGE := chialab/php
-IMAGE := chialab/php-dev
+IMAGE := chialab/php-xhprof
 VERSION ?= latest
 PHP_VERSION = $(firstword $(subst -, ,$(VERSION)))
 
@@ -13,9 +13,9 @@ EXTENSIONS := \
 	bz2 \
 	calendar \
 	exif \
+	gd \
 	iconv \
 	intl \
-	gd \
 	ldap \
 	mbstring \
 	memcached \
@@ -26,10 +26,10 @@ EXTENSIONS := \
 	pgsql \
 	redis \
 	soap \
+	sockets \
 	xhprof \
 	xsl \
-	zip \
-	sockets
+	zip
 ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 8.0 latest))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
