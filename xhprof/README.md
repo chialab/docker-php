@@ -12,17 +12,17 @@
     <a href="https://github.com/chialab/docker-php/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/chialab/docker-php/Build,%20test%20and%20publish%20images?style=flat-square"></a>
     <a href="https://github.com/chialab/docker-php"><img alt="Source link" src="https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square"></a>
     <a href="https://www.chialab.it"><img alt="Authors link" src="https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square"></a>
-    <a href="https://hub.docker.com/r/chialab/php-dev/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php-dev.svg?style=flat-square"></a>
+    <a href="https://hub.docker.com/r/chialab/php-xhprof/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php-xhprof.svg?style=flat-square"></a>
     <a href="https://github.com/chialab/docker-php/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square"></a>
 </p>
 
 ---
 
-Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer), and are meant for *debugging purposes*. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php-dev/) (and if you're reading this file, you're probably already there).
+Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer), and are meant for *profiling purposes*. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php-xhprof/) (and if you're reading this file, you're probably already there).
 
 An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
-For more production-like environments, you might want to choose an [image *without* XDebug installed](https://hub.docker.com/r/chialab/php/), instead.
+For more production-like environments, you might want to choose an [image *without* XHProf installed](https://hub.docker.com/r/chialab/php/), instead.
 
 ## Available tags
 - `latest`
@@ -73,7 +73,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `redis`
 - `soap`
 - `sockets`
-- `xdebug`
+- `xhprof`
 - `xsl`
 - `Zend OPcache`
 - `zip`
@@ -84,23 +84,23 @@ You will probably not need all this stuff. Even if having some extra extensions 
 [Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.  
 [Prestissimo (composer plugin)](https://github.com/hirak/prestissimo) is installed globally in all images. Plugin that downloads packages in parallel to speed up the installation process of Composer packages.
 
-## Configuring XDebug
-XDebug is installed, but not yet configured.
-For features like remote debugging, you will need to pass additional configurations via Apache or Nginx configuration files.
+## Configuring XHProf
+Look at [XHProf documentation](https://www.php.net/manual/en/xhprof.configuration.php) for additional configurations.
+You will need to pass these configurations via Apache or Nginx configuration files.
 
 ### Using Apache
-In the directories you want to enable debug in, you will want to specify additional options via `php_value`, e.g.:
+Specify additional options via `php_value`, e.g.:
 
 ```
-php_value xdebug.remote_enable 1
-php_value xdebug.remote_host 192.168.99.1
+php_value xhprof.output_dir /home/me/xhprof
 ```
 
 ### Using Nginx
-To enable debugging, additional parameters must be passed to the FastCGI PHP interpreter via `fastcgi_param`, e.g.:
+Parameters must be passed to the FastCGI PHP interpreter via `fastcgi_param`, e.g.:
 
 ```
-fastcgi_param PHP_VALUE "xdebug.remote_enable=1\nxdebug.remote_host=192.168.99.1";
+fastcgi_param PHP_VALUE "xhprof.output_dir=/home/me/xhprof";c
+
 ```
 
 ## Contributing

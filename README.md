@@ -20,9 +20,9 @@
 
 Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer). You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
 
-An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/Chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
+An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
-For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), instead.
+For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), or [one with XHProf](https://hub.docker.com/r/chialab/php-xhprof/), instead.
 
 ## Available tags
 - `latest`
@@ -48,7 +48,7 @@ For development environments, you might want to choose an [image with XDebug ins
 - `8.0-apache`
 - `8.0-fpm`
 
-As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen manteinance.
+As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen maintenance.
 
 ## Installed extensions
 The following modules and extensions have been enabled,
@@ -58,9 +58,9 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `bz2`
 - `calendar`
 - `exif`
+- `gd`
 - `iconv`
 - `intl`
-- `gd`
 - `ldap`
 - `mbstring`
 - `mcrypt` (_only PHP ≤ 7.1_)
@@ -72,10 +72,10 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `pgsql`
 - `redis`
 - `soap`
+- `sockets`
 - `xsl`
 - `Zend OPcache`
 - `zip`
-- `sockets`
 
 You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
