@@ -40,33 +40,11 @@ jobs:
           tags: chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           load: true
 
-      - name: Build dev image for testing
-        uses: docker/build-push-action@v2
-        with:
-          cache-to: type=inline
-          context: ./dev
-          build-args: |
-            BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
-          tags: chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
-          load: true
-
-      - name: Build xhprof image for testing
-        uses: docker/build-push-action@v2
-        with:
-          cache-to: type=inline
-          context: ./xhprof
-          build-args: |
-            BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
-          tags: chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }}
-          load: true
-
-      - name: Test images
+      - name: Test image
         env:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: |
           make test VERSION=${VERSION}
-#         make -C dev test VERSION=${VERSION}
-#         make -C xhprof test VERSION=${VERSION}
 
       - name: Login to DockerHub
         if: "github.event_name != 'pull_request'"
@@ -88,6 +66,23 @@ jobs:
           tags: chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
+      - name: Build dev image for testing
+        if: "github.event_name != 'pull_request'"
+        uses: docker/build-push-action@v2
+        with:
+          cache-to: type=inline
+          context: ./dev
+          build-args: |
+            BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
+          tags: chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
+          load: true
+
+      - name: Test dev image
+        if: "github.event_name != 'pull_request'"
+        env:
+          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+        run: make -C dev test VERSION=${VERSION}
+
       - name: Build dev image and push to registry
         if: "github.event_name != 'pull_request'"
         uses: docker/build-push-action@v2
@@ -99,6 +94,22 @@ jobs:
             BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
           tags: chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           push: true
+
+      - name: Build xhprof image for testing
+        uses: docker/build-push-action@v2
+        with:
+          cache-to: type=inline
+          context: ./xhprof
+          build-args: |
+            BASE_IMAGE=${{ matrix.version }}${{ matrix.flavor }}
+          tags: chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }}
+          load: true
+
+      - name: Test xhprof image
+        if: "github.event_name != 'pull_request'"
+        env:
+          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+        run: make -C xhprof test VERSION=${VERSION}
 
       - name: Build xhprof image (amd64 only) and push to registry
         if: "github.event_name != 'pull_request'"
