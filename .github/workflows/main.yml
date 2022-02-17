@@ -67,7 +67,6 @@ jobs:
           push: true
 
       - name: Build dev image for testing
-        if: "github.event_name != 'pull_request'"
         uses: docker/build-push-action@v2
         with:
           cache-to: type=inline
@@ -78,7 +77,6 @@ jobs:
           load: true
 
       - name: Test dev image
-        if: "github.event_name != 'pull_request'"
         env:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: make -C dev test VERSION=${VERSION}
@@ -106,7 +104,6 @@ jobs:
           load: true
 
       - name: Test xhprof image
-        if: "github.event_name != 'pull_request'"
         env:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: make -C xhprof test VERSION=${VERSION}
