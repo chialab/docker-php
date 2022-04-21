@@ -14,11 +14,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       zip unzip \
 # iconv, mbstring and pdo_sqlite are omitted as they are already installed
     && PHP_EXTENSIONS=" \
+      amqp \
       bcmath \
       bz2 \
       calendar \
       exif \
       gd \
+      gettext \
+      imagick \
       intl \
       ldap \
       memcached \
