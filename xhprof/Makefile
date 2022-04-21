@@ -9,12 +9,15 @@ PHP_VERSION = $(firstword $(subst -, ,$(VERSION)))
 
 # Extensions.
 EXTENSIONS := \
+	amqp \
 	bcmath \
 	bz2 \
 	calendar \
 	exif \
 	gd \
+	gettext \
 	iconv \
+	imagick \
 	intl \
 	ldap \
 	mbstring \
