@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=latest
-FROM chialab/php:${BASE_IMAGE}
+ARG BASE_IMAGE=chialab/php:latest
+FROM ${BASE_IMAGE}
 LABEL maintainer="dev@chialab.io"
 
 # Install XDebug.

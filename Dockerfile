@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=latest
-FROM php:${BASE_IMAGE}
+ARG BASE_IMAGE=php:latest
+FROM ${BASE_IMAGE}
 LABEL maintainer="dev@chialab.io"
 
 # Download script to install PHP extensions and dependencies
