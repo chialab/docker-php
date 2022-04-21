@@ -51,7 +51,7 @@ jobs:
         env:
           REGISTRY: localhost:5000/
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
-        run: make test VERSION=${VERSION} REGISTRY=${REGISTRY}
+        run: make test
 
       - name: Build dev image for testing
         uses: docker/build-push-action@v2
@@ -67,7 +67,7 @@ jobs:
         env:
           REGISTRY: localhost:5000/
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
-        run: make -C dev test VERSION=${VERSION} REGISTRY=${REGISTRY}
+        run: make -C dev test
 
       - name: Build xhprof image for testing
         uses: docker/build-push-action@v2
@@ -83,7 +83,7 @@ jobs:
         env:
           REGISTRY: localhost:5000/
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
-        run: make -C xhprof test VERSION=${VERSION} REGISTRY=${REGISTRY}
+        run: make -C xhprof test
 
       - name: Login to DockerHub
         if: "github.event_name != 'pull_request'"
