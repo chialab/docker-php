@@ -45,6 +45,7 @@ jobs:
           build-args: |
             BASE_IMAGE=php:${{ matrix.version }}${{ matrix.flavor }}
           tags: localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+          load: true
           push: true
 
       - name: Test image
@@ -61,6 +62,7 @@ jobs:
           build-args: |
             BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           tags: localhost:5000/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
+          load: true
           push: true
 
       - name: Test dev image
@@ -77,6 +79,7 @@ jobs:
           build-args: |
             BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           tags: localhost:5000/chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }}
+          load: true
           push: true
 
       - name: Test xhprof image
