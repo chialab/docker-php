@@ -110,7 +110,7 @@ jobs:
           context: .
           build-args: |
             BASE_IMAGE=php:${{ matrix.version }}${{ matrix.flavor }}
-          tags:
+          tags: |
             chialab/php:${{ matrix.version }}${{ matrix.flavor }}
             ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           push: true
