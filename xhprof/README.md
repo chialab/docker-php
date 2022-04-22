@@ -57,12 +57,15 @@ As you might have guessed, all tags are built on top of the corresponding tag of
 The following modules and extensions have been enabled,
 in addition to those you can already find in the [official PHP image](https://hub.docker.com/r/_/php/):
 
+- `amqp`
 - `bcmath`
 - `bz2`
 - `calendar`
 - `exif`
 - `gd`
+- `gettext`
 - `iconv`
+- `imagick`
 - `intl`
 - `ldap`
 - `mbstring`
