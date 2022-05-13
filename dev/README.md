@@ -61,6 +61,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `bcmath`
 - `bz2`
 - `calendar`
+- `event`
 - `exif`
 - `gd`
 - `gettext`
