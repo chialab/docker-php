@@ -13,6 +13,7 @@ EXTENSIONS := \
 	bcmath \
 	bz2 \
 	calendar \
+	event \
 	exif \
 	gd \
 	gettext \

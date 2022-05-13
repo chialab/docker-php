@@ -18,6 +18,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       bcmath \
       bz2 \
       calendar \
+      event \
       exif \
       gd \
       gettext \
