@@ -3,7 +3,7 @@ ALL: build
 .PHONY: build test push
 
 PARENT_IMAGE := chialab/php
-IMAGE := chialab/php-dev
+IMAGE := chialab/php-pcov
 VERSION ?= latest
 PHP_VERSION = $(firstword $(subst -, ,$(VERSION)))
 
