@@ -22,7 +22,7 @@ Docker images built on top of the [official PHP images](https://hub.docker.com/r
 
 An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
-For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), or [one with XHProf](https://hub.docker.com/r/chialab/php-xhprof/), instead.
+For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), or [one with XHProf](https://hub.docker.com/r/chialab/php-xhprof/), or another [with PCOV installed](https://hub.docker.com/r/chialab/php-pcov/), instead.
 
 ## Available tags
 - `latest`
@@ -91,9 +91,8 @@ You will probably not need all this stuff. Even if having some extra extensions 
 Since 2020/11/01 both version 1 and 2 are installed, available through `composer1` and `composer2` commands respectively (`composer` in now a symlink to `composer2`).  
 [Prestissimo (composer plugin)](https://github.com/hirak/prestissimo) is installed globally in all images, for use with Composer version 1. It's a plugin that downloads packages in parallel to speed up the installation process of Composer packages.
 
-
 ## Contributing
-If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/Chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
+If you find an issue, or have a special wish not yet fulfilled, please [open an issue on GitHub](https://github.com/chialab/docker-php/issues) providing as many details as you can (the more you are specific about your problem, the easier it is for us to fix it).
 
 Pull requests are welcome, too! 😁 Please, run `make build` and `make test` before attempting a pull request. Also, it would be nice if you could stick to the [best practices for writing Dockerfiles](https://docs.docker.com/articles/dockerfile_best-practices/).
 
