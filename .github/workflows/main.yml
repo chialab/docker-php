@@ -8,10 +8,10 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  docker:
-    name: Build, test and publish
+  test:
+    name: Build and test images
     runs-on: ubuntu-latest
-    if: "!contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]')"
+    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
         version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1' ]
@@ -27,9 +27,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -69,6 +66,24 @@ jobs:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: 'docker pull localhost:5000/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }} && make -C dev test'
 
+      - name: Build PCOV image for testing
+        if: ${{ matrix.version >= 7.1 }}
+        uses: docker/build-push-action@v3
+        with:
+          cache-to: type=inline
+          context: ./pcov
+          build-args: |
+            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+          tags: localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
+          push: true
+
+      - name: Test PCOV image
+        if: ${{ matrix.version >= 7.1 }}
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+        run: 'docker pull localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }} && make -C pcov test'
+
       - name: Build xhprof image for testing
         uses: docker/build-push-action@v3
         with:
@@ -85,15 +100,42 @@ jobs:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: 'docker pull localhost:5000/chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }} && make -C xhprof test'
 
+  publish:
+    name: Build and publish multi-architecture images
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name != 'pull_request' && !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
+    strategy:
+      matrix:
+        version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        flavor: [ '', '-apache', '-fpm' ]
+        include:
+          - version: 'latest'
+            flavor: ''
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: network=host
+
       - name: Login to DockerHub
-        if: "github.event_name != 'pull_request'"
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login to GitHub Container Registry
-        if: "github.event_name != 'pull_request'"
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
@@ -101,7 +143,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image and push to registry
-        if: "github.event_name != 'pull_request'"
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
@@ -116,7 +157,6 @@ jobs:
           push: true
 
       - name: Build dev image and push to registry
-        if: "github.event_name != 'pull_request'"
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
@@ -129,8 +169,19 @@ jobs:
             ghcr.io/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
+      - name: Build PCOV image (amd64 only) and push to registry
+        uses: docker/build-push-action@v3
+        with:
+          cache-to: type=inline
+          context: ./pcov
+          build-args: |
+            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+          tags: |
+            chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
+            ghcr.io/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
+          push: true
+
       - name: Build xhprof image (amd64 only) and push to registry
-        if: "github.event_name != 'pull_request'"
         uses: docker/build-push-action@v3
         with:
           cache-to: type=inline
