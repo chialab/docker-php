@@ -170,6 +170,7 @@ jobs:
           push: true
 
       - name: Build PCOV image (amd64 only) and push to registry
+        if: ${{ matrix.version >= 7.1 }}
         uses: docker/build-push-action@v3
         with:
           cache-to: type=inline
