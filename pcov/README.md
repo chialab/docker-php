@@ -44,6 +44,9 @@ For more production-like environments, you might want to choose an [image *witho
 - `8.1`
 - `8.1-apache`
 - `8.1-fpm`
+- `8.2`
+- `8.2-apache`
+- `8.2-fpm`
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen maintenance.
 

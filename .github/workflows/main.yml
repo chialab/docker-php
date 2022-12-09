@@ -17,7 +17,7 @@ jobs:
     if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
-        version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2' ]
         flavor: [ '', '-apache', '-fpm' ]
         include:
           - version: 'latest'
@@ -109,7 +109,7 @@ jobs:
     if: ${{ github.event_name != 'pull_request' && !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
-        version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2' ]
         flavor: [ '', '-apache', '-fpm' ]
         include:
           - version: 'latest'
