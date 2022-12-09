@@ -34,7 +34,7 @@ EXTENSIONS := \
 	xsl \
 	zip \
 	sockets
-ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 8.0 8.1 latest))
+ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 8.0 8.1 8.2 latest))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
 endif
