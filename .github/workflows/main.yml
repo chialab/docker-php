@@ -36,7 +36,7 @@ jobs:
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Build image for testing
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
@@ -53,7 +53,7 @@ jobs:
         run: 'docker pull localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }} && make test'
 
       - name: Build dev image for testing
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           cache-to: type=inline
           context: ./dev
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build PCOV image for testing
         if: ${{ matrix.version >= 7.1 }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           cache-to: type=inline
           context: ./pcov
@@ -87,7 +87,7 @@ jobs:
         run: 'docker pull localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }} && make -C pcov test'
 
       - name: Build xhprof image for testing
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           cache-to: type=inline
           context: ./xhprof
@@ -146,7 +146,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image and push to registry
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
@@ -160,7 +160,7 @@ jobs:
           push: true
 
       - name: Build dev image and push to registry
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64
           cache-to: type=inline
@@ -174,7 +174,7 @@ jobs:
 
       - name: Build PCOV image and push to registry
         if: ${{ matrix.version >= 7.1 }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64
           cache-to: type=inline
@@ -187,7 +187,7 @@ jobs:
           push: true
 
       - name: Build xhprof image (amd64 only) and push to registry
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           cache-to: type=inline
           context: ./xhprof
