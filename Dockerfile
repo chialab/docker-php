@@ -2,6 +2,13 @@ ARG BASE_IMAGE=php:latest
 FROM ${BASE_IMAGE}
 LABEL maintainer="dev@chialab.io"
 
+# Fix Debian 9 (Stretch) source list, because it has been moved to archive
+RUN if [ "$(grep '^VERSION_ID=' /etc/os-release | cut -d '=' -f 2 | tr -d '"')" -eq "9" ]; then \
+        sed -i -e 's/deb.debian.org/archive.debian.org/g' \
+               -e 's/security.debian.org/archive.debian.org/g' \
+               -e '/stretch-updates/d' /etc/apt/sources.list; \
+    fi
+
 # Download script to install PHP extensions and dependencies
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
