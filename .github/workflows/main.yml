@@ -114,11 +114,6 @@ jobs:
         include:
           - version: 'latest'
             flavor: ''
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -186,9 +181,10 @@ jobs:
             ghcr.io/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
-      - name: Build xhprof image (amd64 only) and push to registry
+      - name: Build xhprof image and push to registry
         uses: docker/build-push-action@v4
         with:
+          platforms: linux/amd64,linux/arm64
           cache-to: type=inline
           context: ./xhprof
           build-args: |
