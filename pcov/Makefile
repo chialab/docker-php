@@ -34,7 +34,7 @@ EXTENSIONS := \
 	xsl \
 	zip \
 	sockets
-ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 8.0 8.1 8.2 latest))
+ifeq (,$(findstring $(PHP_VERSION), 7.2 7.3 7.4 8.0 8.1 8.2 latest alpine))
 	# Add more extensions to PHP < 7.2.
 	EXTENSIONS += mcrypt
 endif
@@ -49,8 +49,8 @@ test:
 		echo 'FAIL [Missing image!!!]'; \
 		exit 1; \
 	fi
-	@IMAGE_PHP_VERSION=`docker container run --rm $(REGISTRY)$(IMAGE):$(VERSION) bash -c '/bin/echo $$PHP_VERSION' | cut -d '.' -f 1,2`; \
-	if [[ "$(PHP_VERSION)" != "latest" && "$${IMAGE_PHP_VERSION}" != "$(PHP_VERSION)" ]]; then \
+	@IMAGE_PHP_VERSION=`docker container run --rm $(REGISTRY)$(IMAGE):$(VERSION) sh -c '/bin/echo $$PHP_VERSION' | cut -d '.' -f 1,2`; \
+	if [[ "$(PHP_VERSION)" != "latest" && "$(PHP_VERSION)" != "alpine" && "$${IMAGE_PHP_VERSION}" != "$(PHP_VERSION)" ]]; then \
 		echo "FAIL [wrong PHP version: expected $(PHP_VERSION), got $${IMAGE_PHP_VERSION}]"; \
 		exit 1; \
 	fi

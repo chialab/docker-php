@@ -18,9 +18,11 @@ jobs:
     strategy:
       matrix:
         version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2' ]
-        flavor: [ '', '-apache', '-fpm' ]
+        flavor: [ '', '-apache', '-fpm', '-alpine', '-fpm-alpine' ]
         include:
           - version: 'latest'
+            flavor: ''
+          - version: 'alpine'
             flavor: ''
     services:
       registry:
@@ -31,16 +33,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        run: |
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-
       - name: Build image for testing
         uses: docker/build-push-action@v4
         with:
           cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
+          file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
             BASE_IMAGE=php:${{ matrix.version }}${{ matrix.flavor }}
           tags: localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
@@ -110,15 +109,12 @@ jobs:
     strategy:
       matrix:
         version: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2' ]
-        flavor: [ '', '-apache', '-fpm' ]
+        flavor: [ '', '-apache', '-fpm', '-alpine', '-fpm-alpine' ]
         include:
           - version: 'latest'
             flavor: ''
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
+          - version: 'alpine'
+            flavor: ''
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -152,6 +148,7 @@ jobs:
           cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
+          file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
             BASE_IMAGE=php:${{ matrix.version }}${{ matrix.flavor }}
           tags: |
