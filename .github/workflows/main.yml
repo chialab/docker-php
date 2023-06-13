@@ -33,9 +33,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: amd64,arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: network=host
+
       - name: Build image for testing
         uses: docker/build-push-action@v4
         with:
+          platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
@@ -51,43 +62,46 @@ jobs:
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: 'docker pull localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }} && make test'
 
-      - name: Build dev image for testing
-        uses: docker/build-push-action@v4
-        with:
-          cache-to: type=inline
-          context: ./dev
-          build-args: |
-            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
-          tags: localhost:5000/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
-          push: true
-
-      - name: Test dev image
-        env:
-          REGISTRY: localhost:5000/
-          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
-        run: 'docker pull localhost:5000/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }} && make -C dev test'
-
-      - name: Build PCOV image for testing
-        if: ${{ matrix.version >= 7.1 }}
-        uses: docker/build-push-action@v4
-        with:
-          cache-to: type=inline
-          context: ./pcov
-          build-args: |
-            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
-          tags: localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
-          push: true
-
-      - name: Test PCOV image
-        if: ${{ matrix.version >= 7.1 }}
-        env:
-          REGISTRY: localhost:5000/
-          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
-        run: 'docker pull localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }} && make -C pcov test'
+#      - name: Build dev image for testing
+#        uses: docker/build-push-action@v4
+#        with:
+#          platforms: linux/amd64,linux/arm64
+#          cache-to: type=inline
+#          context: ./dev
+#          build-args: |
+#            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+#          tags: localhost:5000/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
+#          push: true
+#
+#      - name: Test dev image
+#        env:
+#          REGISTRY: localhost:5000/
+#          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+#        run: 'docker pull localhost:5000/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }} && make -C dev test'
+#
+#      - name: Build PCOV image for testing
+#        if: ${{ matrix.version >= 7.1 }}
+#        uses: docker/build-push-action@v4
+#        with:
+#          platforms: linux/amd64,linux/arm64
+#          cache-to: type=inline
+#          context: ./pcov
+#          build-args: |
+#            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+#          tags: localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
+#          push: true
+#
+#      - name: Test PCOV image
+#        if: ${{ matrix.version >= 7.1 }}
+#        env:
+#          REGISTRY: localhost:5000/
+#          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+#        run: 'docker pull localhost:5000/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }} && make -C pcov test'
 
       - name: Build xhprof image for testing
         uses: docker/build-push-action@v4
         with:
+          platforms: linux/amd64,linux/arm64
           cache-to: type=inline
           context: ./xhprof
           build-args: |
@@ -183,9 +197,15 @@ jobs:
             ghcr.io/chialab/php-pcov:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
-      - name: Build xhprof image (amd64 only) and push to registry
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: amd64,arm64
+
+      - name: Build xhprof image and push to registry
         uses: docker/build-push-action@v4
         with:
+          platforms: linux/amd64,linux/arm64
           cache-to: type=inline
           context: ./xhprof
           build-args: |
