@@ -124,6 +124,15 @@ jobs:
             flavor: ''
           - version: 'alpine'
             flavor: ''
+        exclude:
+          - version: '5.6'
+            flavor: '-alpine'
+          - version: '5.6'
+            flavor: '-fpm-alpine'
+          - version: '7.0'
+            flavor: '-alpine'
+          - version: '7.0'
+            flavor: '-fpm-alpine'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
