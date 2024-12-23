@@ -3,7 +3,7 @@ name: Build, test and publish compatibility images
 on:
   schedule:
     # chosen by fair dice roll
-    - cron: '42 18 * * 3'
+    - cron: '42 18 * * 4'
   push:
     branches:
       - main
