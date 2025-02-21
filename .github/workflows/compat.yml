@@ -13,7 +13,7 @@ on:
 jobs:
   test:
     name: Build and test images
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
@@ -46,7 +46,7 @@ jobs:
 
   publish:
     name: Build and publish multi-architecture images
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: test
     if: ${{ github.event_name != 'pull_request' && !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
