@@ -24,6 +24,8 @@ An automated build is set up, so they should be always up-to-date with the Docke
 
 For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), or [one with XHProf](https://hub.docker.com/r/chialab/php-xhprof/), or another [with PCOV installed](https://hub.docker.com/r/chialab/php-pcov/), instead.
 
+If you are really desperate and need PHP 5.6 with support for MySQL 8.x, check the [php-compat](https://hub.docker.com/r/chialab/php-compat/) image.
+
 ## Available tags
 - `latest`
 - `5.6`
