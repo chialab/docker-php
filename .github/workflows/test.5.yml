@@ -9,7 +9,6 @@ on:
   pull_request:
     types: [opened, synchronize]
 
-
 jobs:
   test-5:
     name: Build and test PHP 5 images

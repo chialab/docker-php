@@ -1,4 +1,4 @@
-name: Publish PHP 5 images
+name: Publish PHP 5 images (amd64 only)
 
 on:
   workflow_run:
@@ -64,7 +64,7 @@ jobs:
       - name: Build image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
@@ -79,7 +79,7 @@ jobs:
       - name: Build dev image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           cache-to: type=inline
           context: ./dev
           build-args: |
@@ -89,9 +89,10 @@ jobs:
             ghcr.io/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
-      - name: Build xhprof image (amd64 only) and push to registry
+      - name: Build xhprof image and push to registry
         uses: docker/build-push-action@v5
         with:
+          platforms: linux/amd64
           cache-to: type=inline
           context: ./xhprof
           build-args: |

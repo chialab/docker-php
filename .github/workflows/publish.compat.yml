@@ -1,4 +1,4 @@
-name: Publish compatibility images
+name: Publish compatibility images (amd64 only)
 
 on:
   workflow_run:
@@ -54,7 +54,7 @@ jobs:
       - name: Build image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           cache-from: type=registry,ref=chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: ./compat
