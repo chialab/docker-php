@@ -1,0 +1,51 @@
+name: Test compatibility images
+
+on:
+  schedule:
+    # chosen by fair dice roll
+    - cron: '42 18 * * 2'
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test-compat:
+    name: Build and test compatibility images
+    runs-on: ubuntu-22.04
+    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
+    strategy:
+      matrix:
+        version: [ '5.6' ]
+        flavor: [ '', '-apache', '-fpm' ]
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_PULL_USER_3 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_3 }}
+
+      - name: Build image for testing
+        uses: docker/build-push-action@v5
+        with:
+          cache-from: type=registry,ref=chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
+          cache-to: type=inline
+          context: ./compat
+          file: ${{ format('compat/{0}.{1}{2}', 'Dockerfile', matrix.version, matrix.flavor) }}
+          tags: localhost:5000/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
+          push: true
+
+      - name: Test image
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+        run: 'docker pull localhost:5000/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }} && make -C compat test'
