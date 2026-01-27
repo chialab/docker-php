@@ -16,7 +16,7 @@ jobs:
     if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
-        version: [ '8.0', '8.1', '8.2', '8.3', '8.4' ]
+        version: [ '8.0', '8.1', '8.2', '8.3', '8.4', '8.5' ]
         flavor: [ '', '-apache', '-fpm', '-alpine', '-fpm-alpine' ]
         include:
           - version: 'latest'
