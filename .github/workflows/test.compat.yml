@@ -31,13 +31,13 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_PULL_USER_3 }}
-          password: ${{ secrets.DOCKER_PULL_PASS_3 }}
+          username: ${{ secrets.DOCKER_PULL_USER_1 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_1 }}
 
       - name: Build image for testing
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=registry,ref=chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
+          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: ./compat
           file: ${{ format('compat/{0}.{1}{2}', 'Dockerfile', matrix.version, matrix.flavor) }}

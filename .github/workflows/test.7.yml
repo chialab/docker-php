@@ -37,21 +37,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Login to DockerHub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_PULL_USER_2 }}
-          password: ${{ secrets.DOCKER_PULL_PASS_2 }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image for testing
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=registry,ref=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
           file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
-            BASE_IMAGE=php:${{ matrix.version }}${{ matrix.flavor }}
+            BASE_IMAGE=ghcr.io/chialab/php-mirror:${{ matrix.version }}${{ matrix.flavor }}
           tags: localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 
