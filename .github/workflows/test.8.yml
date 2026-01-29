@@ -12,7 +12,7 @@ on:
 jobs:
   test-8:
     name: Build and test PHP 8 images
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
