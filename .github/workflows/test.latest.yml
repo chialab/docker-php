@@ -35,12 +35,12 @@ jobs:
       - name: Build image for testing
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}
+#          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}
           cache-to: type=inline
           context: .
           file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
-            BASE_IMAGE=chialab/php:${{ matrix.version }}
+            BASE_IMAGE=php:${{ matrix.version }}
           tags: localhost:5000/chialab/php:${{ matrix.version }}
           push: true
 

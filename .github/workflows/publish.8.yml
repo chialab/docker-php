@@ -54,12 +54,12 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+#          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
           file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
-            BASE_IMAGE=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+            BASE_IMAGE=php:${{ matrix.version }}${{ matrix.flavor }}
           tags: |
             chialab/php:${{ matrix.version }}${{ matrix.flavor }}
             ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}

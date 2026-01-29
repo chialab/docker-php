@@ -36,7 +36,7 @@ jobs:
       - name: Build image for testing
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
+#          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: ./compat
           file: ${{ format('compat/{0}.{1}{2}', 'Dockerfile', matrix.version, matrix.flavor) }}
