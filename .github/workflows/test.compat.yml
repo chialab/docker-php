@@ -5,8 +5,7 @@ on:
     # chosen by fair dice roll
     - cron: '42 18 * * 2'
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     types: [opened, synchronize]
 
@@ -31,8 +30,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_PULL_USER_1 }}
-          password: ${{ secrets.DOCKER_PULL_PASS_1 }}
+          username: ${{ secrets.DOCKER_PULL_USER_4 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_4 }}
 
       - name: Build image for testing
         uses: docker/build-push-action@v5

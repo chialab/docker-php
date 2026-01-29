@@ -1,0 +1,99 @@
+name: Test latest PHP images
+
+on:
+  schedule:
+    # chosen by fair dice roll
+    - cron: '42 18 * * 1'
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test-latest:
+    name: Build and test latest PHP images
+    runs-on: ubuntu-22.04
+    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
+    strategy:
+      matrix:
+        version: [ 'latest', 'alpine' ]
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_PULL_USER_5 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_5 }}
+
+      - name: Build image for testing
+        uses: docker/build-push-action@v5
+        with:
+          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}
+          cache-to: type=inline
+          context: .
+          file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
+          build-args: |
+            BASE_IMAGE=chialab/php:${{ matrix.version }}
+          tags: localhost:5000/chialab/php:${{ matrix.version }}
+          push: true
+
+      - name: Test image
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}
+        run: 'docker pull localhost:5000/chialab/php:${{ matrix.version }} && make test'
+
+      - name: Build dev image for testing
+        uses: docker/build-push-action@v5
+        with:
+          cache-to: type=inline
+          context: ./dev
+          build-args: |
+            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}
+          tags: localhost:5000/chialab/php-dev:${{ matrix.version }}
+          push: true
+
+      - name: Test dev image
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}
+        run: 'docker pull localhost:5000/chialab/php-dev:${{ matrix.version }} && make -C dev test'
+
+      - name: Build PCOV image for testing
+        uses: docker/build-push-action@v5
+        with:
+          cache-to: type=inline
+          context: ./pcov
+          build-args: |
+            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}
+          tags: localhost:5000/chialab/php-pcov:${{ matrix.version }}
+          push: true
+
+      - name: Test PCOV image
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}
+        run: 'docker pull localhost:5000/chialab/php-pcov:${{ matrix.version }} && make -C pcov test'
+
+      - name: Build xhprof image for testing
+        uses: docker/build-push-action@v5
+        with:
+          cache-to: type=inline
+          context: ./xhprof
+          build-args: |
+            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}
+          tags: localhost:5000/chialab/php-xhprof:${{ matrix.version }}
+          push: true
+
+      - name: Test xhprof image
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}
+        run: 'docker pull localhost:5000/chialab/php-xhprof:${{ matrix.version }} && make -C xhprof test'

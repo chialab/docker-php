@@ -18,11 +18,6 @@ jobs:
       matrix:
         version: [ '5.6' ]
         flavor: [ '', '-apache', '-fpm', '-alpine', '-fpm-alpine' ]
-        include:
-          - version: 'latest'
-            flavor: ''
-          - version: 'alpine'
-            flavor: ''
         exclude:
           - version: '5.6'
             flavor: '-alpine'
@@ -37,12 +32,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Login to GitHub Container Registry
+      - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_PULL_USER_1 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_1 }}
 
       - name: Build image for testing
         uses: docker/build-push-action@v5
@@ -52,7 +46,7 @@ jobs:
           context: .
           file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
-            BASE_IMAGE=ghcr.io/chialab/php-mirror:${{ matrix.version }}${{ matrix.flavor }}
+            BASE_IMAGE=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           tags: localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           push: true
 

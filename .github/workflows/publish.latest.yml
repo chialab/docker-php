@@ -1,25 +1,19 @@
-name: Publish PHP 5 images (amd64 only)
+name: Publish latest PHP images
 
 on:
   workflow_run:
-    workflows: ["Test PHP 5 images"]
+    workflows: ["Test latest PHP images"]
     branches: [main]
     types: [completed]
 
 jobs:
-  publish-5:
-    name: Build and publish PHP 5 images
+  publish-8:
+    name: Build and publish PHP 8 images
     runs-on: ubuntu-22.04
-    if: ${{ github.event_name != 'pull_request' && !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       matrix:
-        version: [ '5.6' ]
-        flavor: [ '', '-apache', '-fpm', '-alpine', '-fpm-alpine' ]
-        exclude:
-          - version: '5.6'
-            flavor: '-alpine'
-          - version: '5.6'
-            flavor: '-fpm-alpine'
+        version: [ 'latest', 'alpine' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,11 +30,11 @@ jobs:
       - name: Login to DockerHub (pull)
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_PULL_USER_1 }}
-          password: ${{ secrets.DOCKER_PULL_PASS_1 }}
+          username: ${{ secrets.DOCKER_PULL_USER_5 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_5 }}
 
       - name: Pull base image
-        run: docker pull chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+        run: docker pull chialab/php:${{ matrix.version }}
 
       - name: Login to DockerHub (push)
         uses: docker/login-action@v3
@@ -58,40 +52,52 @@ jobs:
       - name: Build image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64
-          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}
           cache-to: type=inline
           context: .
           file: ${{ ((contains(matrix.flavor, 'alpine') || matrix.version == 'alpine') && 'Dockerfile.alpine') || 'Dockerfile' }}
           build-args: |
-            BASE_IMAGE=chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+            BASE_IMAGE=chialab/php:${{ matrix.version }}
           tags: |
-            chialab/php:${{ matrix.version }}${{ matrix.flavor }}
-            ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+            chialab/php:${{ matrix.version }}
+            ghcr.io/chialab/php:${{ matrix.version }}
           push: true
 
       - name: Build dev image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           cache-to: type=inline
           context: ./dev
           build-args: |
-            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}
           tags: |
-            chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
-            ghcr.io/chialab/php-dev:${{ matrix.version }}${{ matrix.flavor }}
+            chialab/php-dev:${{ matrix.version }}
+            ghcr.io/chialab/php-dev:${{ matrix.version }}
           push: true
 
-      - name: Build xhprof image and push to registry
+      - name: Build PCOV image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
+          cache-to: type=inline
+          context: ./pcov
+          build-args: |
+            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}
+          tags: |
+            chialab/php-pcov:${{ matrix.version }}
+            ghcr.io/chialab/php-pcov:${{ matrix.version }}
+          push: true
+
+      - name: Build xhprof image (amd64 only) and push to registry
+        uses: docker/build-push-action@v5
+        with:
           cache-to: type=inline
           context: ./xhprof
           build-args: |
-            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}
           tags: |
-            chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }}
-            ghcr.io/chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }}
+            chialab/php-xhprof:${{ matrix.version }}
+            ghcr.io/chialab/php-xhprof:${{ matrix.version }}
           push: true

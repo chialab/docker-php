@@ -31,8 +31,8 @@ jobs:
       - name: Login to DockerHub (pull)
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_PULL_USER_1 }}
-          password: ${{ secrets.DOCKER_PULL_PASS_1 }}
+          username: ${{ secrets.DOCKER_PULL_USER_4 }}
+          password: ${{ secrets.DOCKER_PULL_PASS_4 }}
 
       - name: Pull base image
         run: |
