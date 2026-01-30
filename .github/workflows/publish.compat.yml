@@ -1,4 +1,4 @@
-name: Publish compatibility images (amd64 only)
+name: Publish compatibility images
 
 on:
   workflow_run:
