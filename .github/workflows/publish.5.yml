@@ -57,7 +57,7 @@ jobs:
       - name: Build image and push to registry
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
 #          cache-from: type=registry,ref=ghcr.io/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: .
