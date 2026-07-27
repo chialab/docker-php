@@ -100,3 +100,16 @@ jobs:
             chialab/php-xhprof:${{ matrix.version }}
             ghcr.io/chialab/php-xhprof:${{ matrix.version }}
           push: true
+
+      - name: Build OTel image and push to registry
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          cache-to: type=inline
+          context: ./otel
+          build-args: |
+            BASE_IMAGE=ghcr.io/chialab/php:${{ matrix.version }}
+          tags: |
+            chialab/php-otel:${{ matrix.version }}
+            ghcr.io/chialab/php-otel:${{ matrix.version }}
+          push: true

@@ -98,3 +98,19 @@ jobs:
           REGISTRY: localhost:5000/
           VERSION: ${{ matrix.version }}${{ matrix.flavor }}
         run: 'docker pull localhost:5000/chialab/php-xhprof:${{ matrix.version }}${{ matrix.flavor }} && make -C xhprof test'
+
+      - name: Build OTel image for testing
+        uses: docker/build-push-action@v5
+        with:
+          cache-to: type=inline
+          context: ./otel
+          build-args: |
+            BASE_IMAGE=localhost:5000/chialab/php:${{ matrix.version }}${{ matrix.flavor }}
+          tags: localhost:5000/chialab/php-otel:${{ matrix.version }}${{ matrix.flavor }}
+          push: true
+
+      - name: Test OTel image
+        env:
+          REGISTRY: localhost:5000/
+          VERSION: ${{ matrix.version }}${{ matrix.flavor }}
+        run: 'docker pull localhost:5000/chialab/php-otel:${{ matrix.version }}${{ matrix.flavor }} && make -C otel test'
