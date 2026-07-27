@@ -1,41 +1,29 @@
-# Docker PHP images
+<p align="center">
+    <a href="https://www.chialab.io/p/docker-php">
+        <img alt="Docker PHP Images logo" width="144" height="144" src="https://raw.githack.com/chialab/docker-php/master/logo.svg" />
+    </a>
+</p>
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/main.yml?branch=main&style=flat-square)](https://github.com/chialab/docker-php/actions)
-[![Source link](https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square)](https://github.com/chialab/docker-php)
-[![Authors link](https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square)](https://www.chialab.it)
-[![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php.svg?style=flat-square)](https://hub.docker.com/r/chialab/php/)
-[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/master/LICENSE)
+<p align="center">
+  <strong>Docker PHP images</strong>
+</p>
 
-Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer). You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
+<p align="center">
+    <a href="https://github.com/chialab/docker-php/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chialab/docker-php/main.yml?branch=main&style=flat-square"></a>
+    <a href="https://github.com/chialab/docker-php"><img alt="Source link" src="https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square"></a>
+    <a href="https://www.chialab.it"><img alt="Authors link" src="https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square"></a>
+    <a href="https://hub.docker.com/r/chialab/php-otel/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php-otel.svg?style=flat-square"></a>
+    <a href="https://github.com/chialab/docker-php/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square"></a>
+</p>
+
+---
+
+Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer), and are meant for *continuout integration purposes*. You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php-otel/) (and if you're reading this file, you're probably already there).
 
 An automated build is set up, so they should be always up-to-date with the Dockerfiles in the [GitHub repository](https://github.com/chialab/docker-php). Also, every time an official PHP image is updated, a rebuild is triggered, so that you will always find the latest security patches installed in these images.
 
-For development environments, you might want to choose an [image with XDebug installed](https://hub.docker.com/r/chialab/php-dev/), or [one with XHProf](https://hub.docker.com/r/chialab/php-xhprof/), or another [with PCOV installed](https://hub.docker.com/r/chialab/php-pcov/), instead.
-
-If you use Open Telemetry in your project, you may be interested in an [image with the OTel PHP extension](https://hub.docker.com/r/chialab/php-otel/).
-
-If you are really desperate and need PHP 5.6 with support for MySQL 8.x, check the [php-compat](https://hub.docker.com/r/chialab/php-compat/) image.
-
 ## Available tags
 - `latest`
-- `5.6`
-- `5.6-apache`
-- `5.6-fpm`
-- `7.0`
-- `7.0-apache`
-- `7.0-fpm`
-- `7.1`
-- `7.1-apache`
-- `7.1-fpm`
-- `7.2`
-- `7.2-apache`
-- `7.2-fpm`
-- `7.3`
-- `7.3-apache`
-- `7.3-fpm`
-- `7.4`
-- `7.4-apache`
-- `7.4-fpm`
 - `8.0`
 - `8.0-apache`
 - `8.0-fpm`
@@ -51,9 +39,6 @@ If you are really desperate and need PHP 5.6 with support for MySQL 8.x, check t
 - `8.4`
 - `8.4-apache`
 - `8.4-fpm`
-- `8.5`
-- `8.5-apache`
-- `8.5-fpm`
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen maintenance.
 
@@ -78,6 +63,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `memcached`
 - `mysql` (_only PHP 5.x_)
 - `mysqli`
+- `opentelemetry`
 - `pdo_mysql`
 - `pdo_pgsql`
 - `pgsql`
@@ -88,7 +74,7 @@ in addition to those you can already find in the [official PHP image](https://hu
 - `Zend OPcache`
 - `zip`
 
-You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases, you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
+You will probably not need all this stuff. Even if having some extra extensions loaded ain't a big issue in most cases (especially in a development environment), you will very likely want to checkout this repository, remove unwanted extensions from the `Dockerfile`, and build your own image — for sometimes removing is easier than adding. 😉
 
 ## Composer
 [Composer](https://getcomposer.org) is installed globally in all images. Please, refer to their documentation for usage hints.

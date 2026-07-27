@@ -51,7 +51,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       5.6.*) PHP_EXTENSIONS="$PHP_EXTENSIONS mcrypt mysql";; \
       7.0.*|7.1.*) PHP_EXTENSIONS="$PHP_EXTENSIONS mcrypt";; \
     esac \
-    && install-php-extensions $PHP_EXTENSIONS \
+    # On PHP Debian 9 (Stretch) amqp has a dependency on libssh-dev, which pulls in
+    # libssl1.0-dev, which conflicts with the libssl-dev version (1.1.0) needed by the
+    # other extensions. Installing amqp on its own so that install-php-extensions
+    # purges libssl1.0-dev before libssl-dev is installed for the rest.
+    && if [ "${PHP_VERSION%%.*}" = "7" ]; then \
+        install-php-extensions amqp \
+        && install-php-extensions $(echo "$PHP_EXTENSIONS" | sed 's/amqp//'); \
+    else \
+        install-php-extensions $PHP_EXTENSIONS; \
+    fi \
     && if command -v a2enmod; then a2enmod rewrite; fi
 
 # Install Composer.
