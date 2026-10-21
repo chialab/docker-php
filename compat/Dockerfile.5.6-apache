@@ -275,6 +275,9 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 
 RUN chmod +x /usr/local/bin/install-php-extensions
 
+# PEAR < 1.10.18 can't read pecl.php.net responses anymore.
+RUN pear upgrade --force https://pear.php.net/get/PEAR-1.10.18.tgz
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
       curl \

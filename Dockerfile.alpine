@@ -6,6 +6,9 @@ LABEL maintainer="dev@chialab.io"
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions
 
+# PEAR < 1.10.18 can't read pecl.php.net responses anymore.
+RUN pear upgrade --force https://pear.php.net/get/PEAR-1.10.18.tgz
+
 RUN apk add --no-cache \
       coreutils \
       curl \
