@@ -9,7 +9,9 @@ RUN chmod +x /usr/local/bin/install-php-extensions
 # PEAR < 1.10.18 can't read pecl.php.net responses anymore.
 RUN pear upgrade --force https://pear.php.net/get/PEAR-1.10.18.tgz
 
-RUN apk add --no-cache \
+# retry: PECL sometimes replies "No releases available" on CI runners.
+RUN retry() { for i in 1 2 3; do "$@" && return; sleep 10; done; return 1; }; \
+    apk add --no-cache \
       coreutils \
       curl \
       git \
@@ -43,7 +45,7 @@ RUN apk add --no-cache \
       5.6.*) PHP_EXTENSIONS="$PHP_EXTENSIONS mcrypt mysql";; \
       7.0.*|7.1.*) PHP_EXTENSIONS="$PHP_EXTENSIONS mcrypt";; \
     esac \
-    && install-php-extensions $PHP_EXTENSIONS \
+    && retry install-php-extensions $PHP_EXTENSIONS \
     && if command -v a2enmod; then a2enmod rewrite; fi
 
 # Install Composer.

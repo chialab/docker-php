@@ -21,7 +21,9 @@ RUN chmod +x /usr/local/bin/install-php-extensions
 # PEAR < 1.10.18 can't read pecl.php.net responses anymore.
 RUN pear upgrade --force https://pear.php.net/get/PEAR-1.10.18.tgz
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
+# retry: PECL sometimes replies "No releases available" on CI runners.
+RUN retry() { for i in 1 2 3; do "$@" && return; sleep 10; done; return 1; }; \
+    DEBIAN_FRONTEND=noninteractive apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
       curl \
       git \
@@ -60,10 +62,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
     # other extensions. Installing amqp on its own so that install-php-extensions
     # purges libssl1.0-dev before libssl-dev is installed for the rest.
     && if [ "${PHP_VERSION%%.*}" = "7" ]; then \
-        install-php-extensions amqp \
-        && install-php-extensions $(echo "$PHP_EXTENSIONS" | sed 's/amqp//'); \
+        retry install-php-extensions amqp \
+        && retry install-php-extensions $(echo "$PHP_EXTENSIONS" | sed 's/amqp//'); \
     else \
-        install-php-extensions $PHP_EXTENSIONS; \
+        retry install-php-extensions $PHP_EXTENSIONS; \
     fi \
     && if command -v a2enmod; then a2enmod rewrite; fi
 

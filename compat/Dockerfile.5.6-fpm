@@ -254,7 +254,9 @@ RUN chmod +x /usr/local/bin/install-php-extensions
 # PEAR < 1.10.18 can't read pecl.php.net responses anymore.
 RUN pear upgrade --force https://pear.php.net/get/PEAR-1.10.18.tgz
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
+# retry: PECL sometimes replies "No releases available" on CI runners.
+RUN retry() { for i in 1 2 3; do "$@" && return; sleep 10; done; return 1; }; \
+    DEBIAN_FRONTEND=noninteractive apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -qq -y \
       curl \
       git \
@@ -286,7 +288,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -q \
       xsl \
       zip \
     " \
-    && install-php-extensions $PHP_EXTENSIONS
+    && retry install-php-extensions $PHP_EXTENSIONS
 
 # Install Composer.
 ENV PATH=$PATH:/root/composer/vendor/bin \
