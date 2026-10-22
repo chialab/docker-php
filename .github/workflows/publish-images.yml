@@ -39,7 +39,7 @@ jobs:
       - name: Download digests
         uses: actions/download-artifact@v4
         with:
-          pattern: digests-${{ matrix.version }}${{ matrix.flavor }}-*
+          pattern: digests-${{ matrix.version }}${{ matrix.flavor }}-{amd64,arm64}
           path: ${{ runner.temp }}/digests
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -62,6 +62,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.push-username }}
           DOCKERHUB_PASSWORD: ${{ secrets.push-password }}
         run: |
+          shopt -s nullglob
           cd "$RUNNER_TEMP/digests"
           for arch in amd64 arm64; do
             if [[ ! -d "digests-$TAG-$arch" ]]; then
