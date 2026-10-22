@@ -9,7 +9,8 @@ src=/usr/src/php.tar.xz
 work="$(mktemp -d)"
 
 installed=
-if ! command -v patch > /dev/null; then
+# busybox's patch (old Alpine releases) lacks -d and the long options used below
+if ! patch --version 2> /dev/null | grep -q GNU; then
 	if command -v apk > /dev/null; then
 		apk add --no-cache --virtual .patch-deps patch
 	else
