@@ -1,0 +1,25 @@
+From: Remi Collet <remi@remirepo.net>
+Date: Fri, 22 Nov 2024 15:24:16 +0100
+Subject: backport ZSTR_MAX_LEN
+
+(cherry picked from commit 37056ad634d9c44bac0d6c8e730eafaec1344840)
+(cherry picked from commit ff868946218d6d1661a0c35757e2058cb3ed23ec)
+(cherry picked from commit 351dee5281697c14712e261f560d671e1661e51a)
+---
+ Zend/zend_string.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Zend/zend_string.h b/Zend/zend_string.h
+index 113e5ca..e3286e1 100644
+--- a/Zend/zend_string.h
++++ b/Zend/zend_string.h
+@@ -61,6 +61,9 @@ END_EXTERN_C()
+ 
+ #define _ZSTR_STRUCT_SIZE(len) (_ZSTR_HEADER_SIZE + len + 1)
+ 
++#define ZSTR_MAX_OVERHEAD (ZEND_MM_ALIGNED_SIZE(_ZSTR_HEADER_SIZE + 1))
++#define ZSTR_MAX_LEN (SIZE_MAX - ZSTR_MAX_OVERHEAD)
++
+ #define ZSTR_ALLOCA_ALLOC(str, _len, use_heap) do { \
+ 	(str) = (zend_string *)do_alloca(ZEND_MM_ALIGNED_SIZE_EX(_ZSTR_STRUCT_SIZE(_len), 8), (use_heap)); \
+ 	GC_REFCOUNT(str) = 1; \

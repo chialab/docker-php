@@ -1,0 +1,94 @@
+name: Build image
+description: >
+  Builds one image for the runner's architecture and tests it. The image is pushed either to the
+  job's local registry, or by digest to ghcr, recording the digest for the publish workflow.
+
+inputs:
+  image:
+    description: Image name without registry, e.g. php-dev.
+    required: true
+  tag:
+    description: Image tag, e.g. 7.4-apache.
+    required: true
+  arch:
+    description: Runner architecture (amd64 or arm64).
+    required: true
+  context:
+    description: Build context.
+    required: true
+  file:
+    description: Dockerfile path, relative to the repository root.
+    default: ''
+  build-args:
+    description: Build arguments.
+    default: ''
+  build-contexts:
+    description: Additional named build contexts.
+    default: ''
+  push:
+    description: Where to push the image, "local" or "ghcr".
+    default: local
+  cache-write:
+    description: Export the build cache to ghcr.
+    default: 'false'
+  no-cache:
+    description: Ignore the build cache.
+    default: 'false'
+  test:
+    description: Make directory whose "test" target checks the image; empty to skip testing.
+    default: ''
+
+outputs:
+  ref:
+    description: Reference to the built image, usable as BASE_IMAGE.
+    value: ${{ steps.ref.outputs.ref }}
+
+runs:
+  using: composite
+  steps:
+    - name: Build ${{ inputs.image }}
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.file }}
+        build-args: ${{ inputs.build-args }}
+        build-contexts: ${{ inputs.build-contexts }}
+        no-cache: ${{ inputs.no-cache == 'true' }}
+        cache-from: type=registry,ref=ghcr.io/chialab/${{ inputs.image }}:cache-${{ inputs.tag }}-${{ inputs.arch }}
+        cache-to: ${{ inputs.cache-write == 'true' && format('type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ignore-error=true,ref=ghcr.io/chialab/{0}:cache-{1}-{2}', inputs.image, inputs.tag, inputs.arch) || '' }}
+        tags: ${{ inputs.push == 'local' && format('localhost:5000/chialab/{0}:{1}', inputs.image, inputs.tag) || '' }}
+        push: ${{ inputs.push == 'local' }}
+        outputs: ${{ inputs.push == 'ghcr' && format('type=image,name=ghcr.io/chialab/{0},push-by-digest=true,name-canonical=true,push=true', inputs.image) || '' }}
+
+    - name: Resolve ${{ inputs.image }} reference
+      id: ref
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        TAG: ${{ inputs.tag }}
+        DIGEST: ${{ steps.build.outputs.digest }}
+        PUSH: ${{ inputs.push }}
+      run: |
+        if [[ "$PUSH" == 'ghcr' ]]; then
+          echo "ref=ghcr.io/chialab/$IMAGE@$DIGEST" >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/digests/$IMAGE"
+          touch "$RUNNER_TEMP/digests/$IMAGE/${DIGEST#sha256:}"
+        else
+          echo "ref=localhost:5000/chialab/$IMAGE:$TAG" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Test ${{ inputs.image }}
+      if: ${{ inputs.test != '' }}
+      shell: bash
+      env:
+        REGISTRY: localhost:5000/
+        VERSION: ${{ inputs.tag }}
+        IMAGE: ${{ inputs.image }}
+        REF: ${{ steps.ref.outputs.ref }}
+        MAKE_DIR: ${{ inputs.test }}
+      run: |
+        docker pull "$REF"
+        # the Makefile looks the image up by tag
+        docker tag "$REF" "localhost:5000/chialab/$IMAGE:$VERSION"
+        make -C "$MAKE_DIR" test

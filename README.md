@@ -57,6 +57,11 @@ If you are really desperate and need PHP 5.6 with support for MySQL 8.x, check t
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen maintenance.
 
+### Security backports for EOL versions
+The official images of unsupported PHP versions (5.6 to 8.1) no longer receive security fixes. For those versions we rebuild PHP from the official images' Dockerfiles (see [`eol/`](eol/)), on the same OS release, with security patches applied to the PHP sources. The image layout doesn't change, so `docker-php-ext-*` and `install-php-extensions` keep working.
+
+The `PHP_PATCHES` environment variable and the `it.chialab.php.patches` label list what has been applied. `PHP_VERSION` and `php -v` still report the upstream version, so vulnerability scanners may keep flagging fixed issues.
+
 ## Installed extensions
 The following modules and extensions have been enabled,
 in addition to those you can already find in the [official PHP image](https://hub.docker.com/r/_/php/):

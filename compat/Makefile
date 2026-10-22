@@ -43,11 +43,11 @@ endif
 
 build:
 	@echo " =====> Building $(REGISTRY)$(IMAGE):$(VERSION)..."
-	docker image build --quiet -t $(REGISTRY)$(IMAGE):$(VERSION) .
+	docker image build --quiet --build-context patches=../eol/patches -f Dockerfile.$(VERSION) -t $(REGISTRY)$(IMAGE):$(VERSION) .
 
 test:
 	@echo -e "=====> Testing loaded extensions... \c"
-	@if [[ -z `docker image ls $(REGISTRY)$(IMAGE) | grep "\s$(VERSION)\s"` ]]; then \
+	@if ! docker image inspect $(REGISTRY)$(IMAGE):$(VERSION) > /dev/null 2>&1; then \
 		echo 'FAIL [Missing image!!!]'; \
 		exit 1; \
 	fi
@@ -72,6 +72,10 @@ test:
 	fi
 	@if [[ -z `docker container run --rm $(REGISTRY)$(IMAGE):$(VERSION) composer --version 2> /dev/null | grep '^Composer version 2\.[0-9][0-9]*'` ]]; then \
 		echo 'FAIL [Composer]'; \
+		exit 1; \
+	fi
+	@if [[ -z `docker container run --rm $(REGISTRY)$(IMAGE):$(VERSION) sh -c '/bin/echo $$PHP_PATCHES'` ]]; then \
+		echo 'FAIL [PHP_PATCHES]'; \
 		exit 1; \
 	fi
 	@mariadbClientApi=`docker container run --rm $(REGISTRY)$(IMAGE):$(VERSION) php -i | grep -e "Client API.*MariaDB" | wc -l`; \

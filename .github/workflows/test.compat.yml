@@ -40,6 +40,7 @@ jobs:
 #          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: ./compat
+          build-contexts: patches=eol/patches
           file: ${{ format('compat/{0}.{1}{2}', 'Dockerfile', matrix.version, matrix.flavor) }}
           tags: localhost:5000/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           push: true

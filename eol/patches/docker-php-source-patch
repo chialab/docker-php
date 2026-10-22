@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+# Applies the patches listed in "$1/series" to /usr/src/php.tar.xz and repacks it in place, so the
+# official build and any later "docker-php-ext-install" compile the patched sources.
+
+patchDir="$1"
+src=/usr/src/php.tar.xz
+work="$(mktemp -d)"
+
+installed=
+if ! command -v patch > /dev/null; then
+	if command -v apk > /dev/null; then
+		apk add --no-cache --virtual .patch-deps patch
+	else
+		apt-get update
+		apt-get install -y --no-install-recommends patch
+		rm -rf /var/lib/apt/lists/*
+	fi
+	installed=1
+fi
+
+mkdir "$work/php"
+tar -xJf "$src" -C "$work/php" --strip-components=1
+
+grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$patchDir/series" | while read -r p; do
+	echo "Applying $p"
+	patch -d "$work/php" -p1 --forward --no-backup-if-mismatch < "$patchDir/$p"
+done
+
+tar -cJf "$src" -C "$work" php
+# the upstream signature no longer matches the repacked tarball
+rm -f "$src.asc"
+rm -rf "$work"
+
+if [ -n "$installed" ]; then
+	if command -v apk > /dev/null; then
+		apk del --no-network .patch-deps
+	else
+		apt-get purge -y --auto-remove patch
+	fi
+fi

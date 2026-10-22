@@ -1,0 +1,2 @@
+# https://salsa.debian.org/php-team/php/-/tree/7401dd5c10042b6b875370027d775f9c542171b8/debian/patches (Sury 5.6.40-104)
+0261-Avoid-state-corruption-via-bailout.patch
