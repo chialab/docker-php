@@ -3,6 +3,8 @@ name: Publish images
 # Publishes the images built and tested by the triggering build-images.yml run: merges each
 # image's per-arch digests into a multi-arch tag on ghcr, then copies it to Docker Hub. Nothing is
 # rebuilt, and nothing is read from Docker Hub, so publishing doesn't count against its pull limits.
+# Callers must skip runs whose commit is no longer the head of main (github.sha), so an older
+# commit whose tests finished late can't overwrite the tags of a newer one.
 
 on:
   workflow_call:
@@ -24,6 +26,10 @@ on:
         required: true
       push-password:
         required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   publish:

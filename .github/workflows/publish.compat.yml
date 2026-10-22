@@ -6,11 +6,17 @@ on:
     branches: [main]
     types: [completed]
 
+# Every completed test run starts this workflow; runs that won't publish get their own group, so
+# they can't cancel a publish in progress.
+concurrency:
+  group: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'pull_request' && github.event.workflow_run.head_sha == github.sha && github.workflow || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   publish-compat:
     name: Build and publish compatibility images
     runs-on: ubuntu-22.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' && !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'pull_request' && github.event.workflow_run.head_sha == github.sha }}
     strategy:
       fail-fast: false
       matrix:

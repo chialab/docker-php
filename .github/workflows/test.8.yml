@@ -12,7 +12,6 @@ on:
 jobs:
   test-8:
     name: Build and test PHP 8 images
-    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     permissions:
       contents: read
       packages: write
