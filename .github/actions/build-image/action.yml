@@ -48,7 +48,7 @@ runs:
   steps:
     - name: Build ${{ inputs.image }}
       id: build
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v7
       with:
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
