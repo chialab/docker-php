@@ -57,7 +57,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image and push to registry
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           platforms: linux/amd64,linux/arm64
 #          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}

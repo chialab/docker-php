@@ -38,7 +38,7 @@ jobs:
           password: ${{ secrets.DOCKER_PULL_PASS_4 }}
 
       - name: Build image for testing
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
 #          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
