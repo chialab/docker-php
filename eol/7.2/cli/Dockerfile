@@ -101,8 +101,9 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
-COPY --from=scripts docker-php-source /usr/local/bin/
+# chialab: helper scripts are added from the source commit.
+ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/20ebff40bb865416f3767540df06ad1df384337d/7.2/buster/cli
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
 ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
@@ -213,11 +214,13 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-# chialab: from eol/scripts.
-COPY --from=scripts docker-php-ext-configure/7.2 /usr/local/bin/docker-php-ext-configure
-COPY --from=scripts docker-php-ext-enable/7.2 /usr/local/bin/docker-php-ext-enable
-COPY --from=scripts docker-php-ext-install/7.2 /usr/local/bin/docker-php-ext-install
-COPY --from=scripts docker-php-entrypoint/cli /usr/local/bin/docker-php-entrypoint
+# chialab: from the source commit.
+ADD --chmod=755 \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-configure \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-enable \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-install \
+	$DOCKER_PHP_SCRIPTS/docker-php-entrypoint \
+	/usr/local/bin/
 
 # sodium was built as a shared module (so that it can be replaced later if so desired), so let's enable it too (https://github.com/docker-library/php/issues/598)
 RUN docker-php-ext-enable sodium

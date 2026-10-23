@@ -153,8 +153,9 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
-COPY --from=scripts docker-php-source /usr/local/bin/
+# chialab: helper scripts are added from the source commit.
+ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.1/trixie/apache
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
 ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
@@ -287,11 +288,13 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-# chialab: from eol/scripts.
-COPY --from=scripts docker-php-ext-configure/7.2 /usr/local/bin/docker-php-ext-configure
-COPY --from=scripts docker-php-ext-enable/7.3 /usr/local/bin/docker-php-ext-enable
-COPY --from=scripts docker-php-ext-install/8.1 /usr/local/bin/docker-php-ext-install
-COPY --from=scripts docker-php-entrypoint/apache /usr/local/bin/docker-php-entrypoint
+# chialab: from the source commit.
+ADD --chmod=755 \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-configure \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-enable \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-install \
+	$DOCKER_PHP_SCRIPTS/docker-php-entrypoint \
+	/usr/local/bin/
 
 # enable OPcache by default (https://wiki.php.net/rfc/make_opcache_required)
 RUN docker-php-ext-enable opcache
@@ -303,8 +306,8 @@ ENTRYPOINT ["docker-php-entrypoint"]
 # https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
 STOPSIGNAL SIGWINCH
 
-# chialab: from eol/scripts.
-COPY --from=scripts apache2-foreground /usr/local/bin/
+# chialab: from the source commit.
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/apache2-foreground /usr/local/bin/
 WORKDIR /var/www/html
 
 EXPOSE 80

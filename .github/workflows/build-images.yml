@@ -110,7 +110,6 @@ jobs:
           context: ${{ steps.plan.outputs.eol-dir }}
           build-contexts: |
             patches=eol/patches
-            scripts=eol/scripts
           push: ${{ env.PUSH }}
           cache-write: ${{ env.CACHE_WRITE }}
 
