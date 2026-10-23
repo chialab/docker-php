@@ -169,7 +169,8 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-COPY docker-php-source /usr/local/bin/
+# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
+COPY --from=scripts docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
 ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
@@ -270,7 +271,11 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
+# chialab: from eol/scripts.
+COPY --from=scripts docker-php-ext-configure/5.6 /usr/local/bin/docker-php-ext-configure
+COPY --from=scripts docker-php-ext-enable/7.1 /usr/local/bin/docker-php-ext-enable
+COPY --from=scripts docker-php-ext-install/7.1 /usr/local/bin/docker-php-ext-install
+COPY --from=scripts docker-php-entrypoint/apache /usr/local/bin/docker-php-entrypoint
 
 # temporary "freetype-config" workaround for https://github.com/docker-library/php/issues/865 (https://bugs.php.net/bug.php?id=76324)
 RUN { echo '#!/bin/sh'; echo 'exec pkg-config "$@" freetype2'; } > /usr/local/bin/freetype-config && chmod +x /usr/local/bin/freetype-config
@@ -280,7 +285,8 @@ ENTRYPOINT ["docker-php-entrypoint"]
 # https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
 STOPSIGNAL SIGWINCH
 
-COPY apache2-foreground /usr/local/bin/
+# chialab: from eol/scripts.
+COPY --from=scripts apache2-foreground /usr/local/bin/
 WORKDIR /var/www/html
 
 EXPOSE 80

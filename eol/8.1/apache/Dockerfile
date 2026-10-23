@@ -153,7 +153,8 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-COPY docker-php-source /usr/local/bin/
+# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
+COPY --from=scripts docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
 ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
@@ -286,7 +287,11 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
+# chialab: from eol/scripts.
+COPY --from=scripts docker-php-ext-configure/7.2 /usr/local/bin/docker-php-ext-configure
+COPY --from=scripts docker-php-ext-enable/7.3 /usr/local/bin/docker-php-ext-enable
+COPY --from=scripts docker-php-ext-install/8.1 /usr/local/bin/docker-php-ext-install
+COPY --from=scripts docker-php-entrypoint/apache /usr/local/bin/docker-php-entrypoint
 
 # enable OPcache by default (https://wiki.php.net/rfc/make_opcache_required)
 RUN docker-php-ext-enable opcache
@@ -298,7 +303,8 @@ ENTRYPOINT ["docker-php-entrypoint"]
 # https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
 STOPSIGNAL SIGWINCH
 
-COPY apache2-foreground /usr/local/bin/
+# chialab: from eol/scripts.
+COPY --from=scripts apache2-foreground /usr/local/bin/
 WORKDIR /var/www/html
 
 EXPOSE 80

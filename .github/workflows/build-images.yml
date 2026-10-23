@@ -108,7 +108,9 @@ jobs:
           tag: ${{ steps.plan.outputs.tag }}
           arch: ${{ matrix.arch }}
           context: ${{ steps.plan.outputs.eol-dir }}
-          build-contexts: patches=eol/patches
+          build-contexts: |
+            patches=eol/patches
+            scripts=eol/scripts
           push: ${{ env.PUSH }}
           cache-write: ${{ env.CACHE_WRITE }}
 
