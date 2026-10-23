@@ -43,7 +43,7 @@ jobs:
         exclude: ${{ fromJSON(inputs.exclude) }}
     steps:
       - name: Download digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: digests-${{ matrix.version }}${{ matrix.flavor }}-{amd64,arm64}
           path: ${{ runner.temp }}/digests

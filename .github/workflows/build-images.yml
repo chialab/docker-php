@@ -52,7 +52,7 @@ jobs:
       NO_CACHE: ${{ github.event_name == 'schedule' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Plan
         id: plan
