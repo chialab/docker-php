@@ -167,6 +167,13 @@ RUN set -xe; \
 
 COPY --from=php:5.6-apache /usr/local/bin/docker-php-source /usr/local/bin/
 
+# Security backports for this EOL version (see eol/patches).
+ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
+LABEL it.chialab.php.patches="CVE-2026-109618 CVE-2026-109619"
+RUN --mount=type=bind,from=patches,source=5.6,target=/usr/src/php-patches \
+	--mount=type=bind,from=patches,source=docker-php-source-patch,target=/usr/local/bin/docker-php-source-patch \
+	docker-php-source-patch /usr/src/php-patches
+
 RUN set -eux; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \

@@ -1,0 +1,92 @@
+name: Publish images
+
+# Publishes the images built and tested by the triggering build-images.yml run: merges each
+# image's per-arch digests into a multi-arch tag on ghcr, then copies it to Docker Hub. Nothing is
+# rebuilt, and nothing is read from Docker Hub, so publishing doesn't count against its pull limits.
+# Callers must skip runs whose commit is no longer the head of main (github.sha), so an older
+# commit whose tests finished late can't overwrite the tags of a newer one.
+
+on:
+  workflow_call:
+    inputs:
+      versions:
+        description: JSON list of PHP versions.
+        type: string
+        required: true
+      flavors:
+        description: JSON list of flavors.
+        type: string
+        default: '[""]'
+      exclude:
+        description: JSON list of version/flavor combinations to skip.
+        type: string
+        default: '[]'
+    secrets:
+      push-username:
+        required: true
+      push-password:
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: ${{ matrix.version }}${{ matrix.flavor }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ${{ fromJSON(inputs.versions) }}
+        flavor: ${{ fromJSON(inputs.flavors) }}
+        exclude: ${{ fromJSON(inputs.exclude) }}
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          pattern: digests-${{ matrix.version }}${{ matrix.flavor }}-{amd64,arm64}
+          path: ${{ runner.temp }}/digests
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create multi-arch tags
+        env:
+          TAG: ${{ matrix.version }}${{ matrix.flavor }}
+          GHCR_USERNAME: ${{ github.repository_owner }}
+          GHCR_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.push-username }}
+          DOCKERHUB_PASSWORD: ${{ secrets.push-password }}
+        run: |
+          shopt -s nullglob
+          cd "$RUNNER_TEMP/digests"
+          for arch in amd64 arm64; do
+            if [[ ! -d "digests-$TAG-$arch" ]]; then
+              echo "Missing the $arch build of $TAG" >&2
+              exit 1
+            fi
+          done
+          for image in $(find . -mindepth 2 -maxdepth 2 -type d -printf '%f\n' | sort -u); do
+            sources=()
+            for digest in digests-*/"$image"/*; do
+              sources+=("ghcr.io/chialab/$image@sha256:$(basename "$digest")")
+            done
+            docker buildx imagetools create -t "ghcr.io/chialab/$image:$TAG" "${sources[@]}"
+            # The patched base image is internal and stays on ghcr.
+            if [[ "$image" != 'php-base' ]]; then
+              skopeo copy --all --preserve-digests \
+                --src-creds "$GHCR_USERNAME:$GHCR_PASSWORD" \
+                --dest-creds "$DOCKERHUB_USERNAME:$DOCKERHUB_PASSWORD" \
+                "docker://ghcr.io/chialab/$image:$TAG" "docker://docker.io/chialab/$image:$TAG"
+            fi
+          done

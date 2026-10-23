@@ -1,0 +1,3 @@
+# https://salsa.debian.org/php-team/php/-/tree/ecf76f6726bee03657a2c608240685732312fe54/debian/patches (Sury 7.3.33-35)
+0107-backport-ZSTR_MAX_LEN.patch
+0139-Avoid-state-corruption-via-bailout.patch

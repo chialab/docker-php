@@ -1,0 +1,195 @@
+name: Build and test images
+
+# Builds and tests each version × flavor natively on amd64 and arm64. Pull requests push to a local
+# registry; runs on main push by digest to ghcr and upload the digests for publish-images.yml.
+
+on:
+  workflow_call:
+    inputs:
+      versions:
+        description: JSON list of PHP versions.
+        type: string
+        required: true
+      flavors:
+        description: JSON list of flavors.
+        type: string
+        default: '[""]'
+      exclude:
+        description: JSON list of version/flavor combinations to skip.
+        type: string
+        default: '[]'
+    secrets:
+      pull-username:
+        required: true
+      pull-password:
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.version }}${{ matrix.flavor }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ${{ fromJSON(inputs.versions) }}
+        flavor: ${{ fromJSON(inputs.flavors) }}
+        arch: [ 'amd64', 'arm64' ]
+        exclude: ${{ fromJSON(inputs.exclude) }}
+    services:
+      registry:
+        image: ${{ github.event_name == 'pull_request' && 'registry:2' || '' }}
+        ports:
+          - 5000:5000
+    env:
+      PUSH: ${{ github.event_name == 'pull_request' && 'local' || 'ghcr' }}
+      CACHE_WRITE: ${{ github.event_name != 'pull_request' }}
+      # Scheduled runs rebuild the extension layers, so they pick up new extension and OS package
+      # versions; the patched PHP base is only rebuilt when its inputs change.
+      NO_CACHE: ${{ github.event_name == 'schedule' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Plan
+        id: plan
+        env:
+          VERSION: ${{ matrix.version }}
+          FLAVOR: ${{ matrix.flavor }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          tag="$VERSION$FLAVOR"
+          flavorDir="${FLAVOR#-}"
+          eolDir="eol/$VERSION/${flavorDir:-cli}"
+          [[ -d "$eolDir" ]] && eol=true || eol=false
+          [[ "$tag" == *alpine* ]] && dockerfile=Dockerfile.alpine || dockerfile=Dockerfile
+          [[ "$VERSION" == '5.6' && "$ARCH" == 'arm64' ]] && dev=false || dev=true
+          [[ "$VERSION" == '5.6' || "$VERSION" == '7.0' ]] && pcov=false || pcov=true
+          [[ "$ARCH" == 'amd64' ]] && xhprof=true || xhprof=false
+          [[ "$VERSION" == 8.* || "$VERSION" == 'latest' || "$VERSION" == 'alpine' ]] && otel=true || otel=false
+          {
+            echo "tag=$tag"
+            echo "eol=$eol"
+            echo "eol-dir=$eolDir"
+            echo "dockerfile=$dockerfile"
+            echo "dev=$dev"
+            echo "pcov=$pcov"
+            echo "xhprof=$xhprof"
+            echo "otel=$otel"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.pull-username }}
+          password: ${{ secrets.pull-password }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build patched PHP base image
+        id: base
+        if: ${{ steps.plan.outputs.eol == 'true' }}
+        uses: ./.github/actions/build-image
+        with:
+          image: php-base
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: ${{ steps.plan.outputs.eol-dir }}
+          build-contexts: |
+            patches=eol/patches
+            scripts=eol/scripts
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+
+      - name: Build PHP image
+        id: php
+        uses: ./.github/actions/build-image
+        with:
+          image: php
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: .
+          file: ${{ steps.plan.outputs.dockerfile }}
+          build-args: BASE_IMAGE=${{ steps.plan.outputs.eol == 'true' && steps.base.outputs.ref || format('php:{0}', steps.plan.outputs.tag) }}
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+          no-cache: ${{ env.NO_CACHE }}
+          test: .
+
+      - name: Build dev image
+        if: ${{ steps.plan.outputs.dev == 'true' }}
+        uses: ./.github/actions/build-image
+        with:
+          image: php-dev
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: ./dev
+          build-args: BASE_IMAGE=${{ steps.php.outputs.ref }}
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+          no-cache: ${{ env.NO_CACHE }}
+          test: dev
+
+      - name: Build PCOV image
+        if: ${{ steps.plan.outputs.pcov == 'true' }}
+        uses: ./.github/actions/build-image
+        with:
+          image: php-pcov
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: ./pcov
+          build-args: BASE_IMAGE=${{ steps.php.outputs.ref }}
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+          no-cache: ${{ env.NO_CACHE }}
+          test: pcov
+
+      - name: Build xhprof image
+        if: ${{ steps.plan.outputs.xhprof == 'true' }}
+        uses: ./.github/actions/build-image
+        with:
+          image: php-xhprof
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: ./xhprof
+          build-args: BASE_IMAGE=${{ steps.php.outputs.ref }}
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+          no-cache: ${{ env.NO_CACHE }}
+          test: xhprof
+
+      - name: Build OTel image
+        if: ${{ steps.plan.outputs.otel == 'true' }}
+        uses: ./.github/actions/build-image
+        with:
+          image: php-otel
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: ./otel
+          build-args: BASE_IMAGE=${{ steps.php.outputs.ref }}
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+          no-cache: ${{ env.NO_CACHE }}
+          test: otel
+
+      - name: Upload digests
+        if: ${{ env.PUSH == 'ghcr' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ steps.plan.outputs.tag }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/
+          if-no-files-found: error
+          retention-days: 7

@@ -9,11 +9,14 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test-compat:
     name: Build and test compatibility images
     runs-on: ubuntu-22.04
-    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}
     strategy:
       fail-fast: false
       matrix:
@@ -40,6 +43,7 @@ jobs:
 #          cache-from: type=registry,ref=ghcr.io/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           cache-to: type=inline
           context: ./compat
+          build-contexts: patches=eol/patches
           file: ${{ format('compat/{0}.{1}{2}', 'Dockerfile', matrix.version, matrix.flavor) }}
           tags: localhost:5000/chialab/php-compat:${{ matrix.version }}${{ matrix.flavor }}
           push: true
