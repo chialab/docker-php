@@ -1,22 +1,10 @@
-<p align="center">
-    <a href="https://www.chialab.io/p/docker-php">
-        <img alt="Docker PHP Images logo" width="144" height="144" src="https://raw.githack.com/chialab/docker-php/master/logo.svg" />
-    </a>
-</p>
+# Docker PHP images: compat
 
-<p align="center">
-  <strong>Docker PHP images</strong>
-</p>
-
-<p align="center">
-    <a href="https://github.com/chialab/docker-php/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chialab/docker-php/main.yml?branch=main&style=flat-square"></a>
-    <a href="https://github.com/chialab/docker-php"><img alt="Source link" src="https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square"></a>
-    <a href="https://www.chialab.it"><img alt="Authors link" src="https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square"></a>
-    <a href="https://hub.docker.com/r/chialab/php-pcov/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php-pcov.svg?style=flat-square"></a>
-    <a href="https://github.com/chialab/docker-php/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square"></a>
-</p>
-
----
+[![PHP 5 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.5.yml?branch=main&label=PHP%205&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.5.yml?query=branch%3Amain)
+[![Source link](https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square)](https://github.com/chialab/docker-php)
+[![Authors link](https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square)](https://www.chialab.it)
+[![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php-compat.svg?style=flat-square)](https://hub.docker.com/r/chialab/php-compat/)
+[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/main/LICENSE)
 
 Compatibility docker images.
 
@@ -81,4 +69,4 @@ Pull requests are welcome, too! 😁 Please, run `make build` and `make test` be
 
 ## License
 
-Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/master/LICENSE) license.
+Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/main/LICENSE) license.

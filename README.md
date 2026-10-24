@@ -1,10 +1,13 @@
 # Docker PHP images
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/main.yml?branch=main&style=flat-square)](https://github.com/chialab/docker-php/actions)
+[![PHP 5 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.5.yml?branch=main&label=PHP%205&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.5.yml?query=branch%3Amain)
+[![PHP 7 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.7.yml?branch=main&label=PHP%207&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.7.yml?query=branch%3Amain)
+[![PHP 8 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.8.yml?branch=main&label=PHP%208&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.8.yml?query=branch%3Amain)
+[![latest build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.latest.yml?branch=main&label=latest&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.latest.yml?query=branch%3Amain)
 [![Source link](https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square)](https://github.com/chialab/docker-php)
 [![Authors link](https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square)](https://www.chialab.it)
 [![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php.svg?style=flat-square)](https://hub.docker.com/r/chialab/php/)
-[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/main/LICENSE)
 
 Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer). You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
 
@@ -85,4 +88,4 @@ Pull requests are welcome, too! 😁 Please, run `make build` and `make test` be
 
 ## License
 
-Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/master/LICENSE) license.
+Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/main/LICENSE) license.
