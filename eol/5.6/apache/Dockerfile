@@ -4,6 +4,11 @@
 # with the changes marked "chialab:".
 #
 
+# chialab: deb.sury.org's patches for this version, from the Salsa commit of the build named in PHP_PATCHES.
+FROM scratch AS deb-patches
+ARG DEB_PATCHES=https://salsa.debian.org/php-team/php/-/archive/37a17e9a4ea67d5422411675b8564860dcf4cc22/php-37a17e9a4ea67d5422411675b8564860dcf4cc22.tar.gz?path=debian/patches
+ADD --unpack=true $DEB_PATCHES /
+
 FROM debian:stretch-slim
 
 # chialab: Debian stretch has been moved to archive.debian.org.
@@ -176,11 +181,12 @@ ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/fab4
 ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
-ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
-LABEL it.chialab.php.patches="CVE-2026-109618 CVE-2026-109619"
-RUN --mount=type=bind,from=patches,source=5.6,target=/usr/src/php-patches \
+ENV PHP_PATCHES="deb.sury.org-5.6.40-105"
+LABEL it.chialab.php.patches="deb.sury.org-5.6.40-105"
+RUN --mount=type=bind,from=deb-patches,target=/usr/src/deb-patches \
+	--mount=type=bind,from=patches,source=series.5.6,target=/usr/src/php-series \
 	--mount=type=bind,from=patches,source=docker-php-source-patch,target=/usr/local/bin/docker-php-source-patch \
-	docker-php-source-patch /usr/src/php-patches
+	docker-php-source-patch /usr/src/php-series /usr/src/deb-patches
 
 RUN set -eux; \
 	\

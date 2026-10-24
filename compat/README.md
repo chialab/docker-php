@@ -22,9 +22,11 @@ Compatibility docker images.
 
 ### PHP 5.6
 
-Built from the latest official PHP 5.6 Dockerfiles ([this](https://github.com/docker-library/php/tree/783878384a8f3953ed571e5a34ba0fe546726c85) commit),
-with PHP compiled to use MariaDB's `libmysqlclient` connector. This fixes connections with MySQL 8.0+, which uses a default
-collation not recognized by the official image's `mysqlnd` connector (`utf8mb4`).
+Built on top of [`chialab/php:5.6`](../README.md) (same tag), with the `mysql`, `mysqli` and `pdo_mysql` extensions rebuilt
+against MariaDB's `libmysqlclient` connector instead of `mysqlnd`. Unlike `mysqlnd` 5.6, it can connect to MySQL 8.0+ servers
+whose default authentication plugin is `caching_sha2_password`, as long as the account uses `mysql_native_password`. Accounts
+using `caching_sha2_password` aren't supported, and the `mysqlnd`-only APIs (such as `mysqli_stmt::get_result()`) aren't
+available.
 
 ## Available tags
 - `5.6`

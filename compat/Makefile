@@ -2,6 +2,7 @@ SHELL := /bin/bash
 ALL: build
 .PHONY: build test push
 
+PARENT_IMAGE := chialab/php
 IMAGE := chialab/php-compat
 VERSION ?= latest
 PHP_VERSION = $(firstword $(subst -, ,$(VERSION)))
@@ -43,7 +44,7 @@ endif
 
 build:
 	@echo " =====> Building $(REGISTRY)$(IMAGE):$(VERSION)..."
-	docker image build --quiet --build-context patches=../eol/patches -f Dockerfile.$(VERSION) -t $(REGISTRY)$(IMAGE):$(VERSION) .
+	docker image build --quiet --build-arg 'BASE_IMAGE=$(PARENT_IMAGE):$(VERSION)' -t $(REGISTRY)$(IMAGE):$(VERSION) .
 
 test:
 	@echo -e "=====> Testing loaded extensions... \c"
