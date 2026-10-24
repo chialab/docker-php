@@ -70,6 +70,7 @@ jobs:
           [[ "$VERSION" == '5.6' || "$VERSION" == '7.0' ]] && pcov=false || pcov=true
           [[ "$ARCH" == 'amd64' ]] && xhprof=true || xhprof=false
           [[ "$VERSION" == 8.* || "$VERSION" == 'latest' || "$VERSION" == 'alpine' ]] && otel=true || otel=false
+          [[ "$VERSION" == '5.6' ]] && compat=true || compat=false
           {
             echo "tag=$tag"
             echo "eol=$eol"
@@ -79,6 +80,7 @@ jobs:
             echo "pcov=$pcov"
             echo "xhprof=$xhprof"
             echo "otel=$otel"
+            echo "compat=$compat"
           } >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
@@ -183,6 +185,20 @@ jobs:
           cache-write: ${{ env.CACHE_WRITE }}
           no-cache: ${{ env.NO_CACHE }}
           test: otel
+
+      - name: Build compat image
+        if: ${{ steps.plan.outputs.compat == 'true' }}
+        uses: ./.github/actions/build-image
+        with:
+          image: php-compat
+          tag: ${{ steps.plan.outputs.tag }}
+          arch: ${{ matrix.arch }}
+          context: ./compat
+          build-args: BASE_IMAGE=${{ steps.php.outputs.ref }}
+          push: ${{ env.PUSH }}
+          cache-write: ${{ env.CACHE_WRITE }}
+          no-cache: ${{ env.NO_CACHE }}
+          test: compat
 
       - name: Upload digests
         if: ${{ env.PUSH == 'ghcr' }}
