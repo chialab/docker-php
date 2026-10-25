@@ -65,6 +65,7 @@ jobs:
           flavorDir="${FLAVOR#-}"
           eolDir="eol/$VERSION/${flavorDir:-cli}"
           [[ -d "$eolDir" ]] && eol=true || eol=false
+          [[ "$eol" == true ]] && debPatches="$(sed -n 's/^ARG DEB_PATCHES=//p' "$eolDir/Dockerfile")" || debPatches=
           [[ "$tag" == *alpine* ]] && dockerfile=Dockerfile.alpine || dockerfile=Dockerfile
           [[ "$VERSION" == '5.6' && "$ARCH" == 'arm64' ]] && dev=false || dev=true
           [[ "$VERSION" == '5.6' || "$VERSION" == '7.0' ]] && pcov=false || pcov=true
@@ -75,6 +76,7 @@ jobs:
             echo "tag=$tag"
             echo "eol=$eol"
             echo "eol-dir=$eolDir"
+            echo "deb-patches=$debPatches"
             echo "dockerfile=$dockerfile"
             echo "dev=$dev"
             echo "pcov=$pcov"
@@ -101,6 +103,32 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Restore deb.sury.org's patches
+        id: deb-patches
+        if: ${{ steps.plan.outputs.eol == 'true' }}
+        uses: actions/cache@v6
+        with:
+          path: ${{ runner.temp }}/deb-patches
+          key: deb-patches-${{ steps.plan.outputs.deb-patches }}
+
+      - name: Download deb.sury.org's patches
+        if: ${{ steps.plan.outputs.eol == 'true' && steps.deb-patches.outputs.cache-hit != 'true' }}
+        env:
+          URL: ${{ steps.plan.outputs.deb-patches }}
+        run: |
+          archive="$RUNNER_TEMP/deb-patches.tar.gz"
+          dir="$RUNNER_TEMP/deb-patches"
+          for attempt in 1 2 3 4 5; do
+            rm -rf "$dir"
+            mkdir "$dir"
+            if curl -fsSL --retry 3 -o "$archive" "$URL" && tar -xzf "$archive" -C "$dir"; then
+              exit 0
+            fi
+            echo "::warning::Attempt $attempt to download $URL failed"
+            sleep $((attempt * 15))
+          done
+          exit 1
+
       - name: Build patched PHP base image
         id: base
         if: ${{ steps.plan.outputs.eol == 'true' }}
@@ -112,6 +140,7 @@ jobs:
           context: ${{ steps.plan.outputs.eol-dir }}
           build-contexts: |
             patches=eol/patches
+            deb-patches=${{ runner.temp }}/deb-patches
           push: ${{ env.PUSH }}
           cache-write: ${{ env.CACHE_WRITE }}
 
