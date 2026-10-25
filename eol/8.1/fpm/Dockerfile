@@ -4,6 +4,11 @@
 # with the changes marked "chialab:".
 #
 
+# chialab: deb.sury.org's patches for this version, from the Salsa commit of the build named in PHP_PATCHES.
+FROM scratch AS deb-patches
+ARG DEB_PATCHES=https://salsa.debian.org/php-team/php/-/archive/4e430ad99622d9fabcee27d6dba438c81de716eb/php-4e430ad99622d9fabcee27d6dba438c81de716eb.tar.gz?path=debian/patches
+ADD --unpack=true $DEB_PATCHES /
+
 FROM debian:trixie-slim
 
 # prevent Debian's PHP packages from being installed
@@ -93,15 +98,17 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
-COPY --from=scripts docker-php-source /usr/local/bin/
+# chialab: helper scripts are added from the source commit.
+ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/5c037abaf9dc0095e29807c048d9d1b97e6a9716/8.1/trixie/fpm
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
-ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
-LABEL it.chialab.php.patches="CVE-2026-109618 CVE-2026-109619"
-RUN --mount=type=bind,from=patches,source=8.1,target=/usr/src/php-patches \
+ENV PHP_PATCHES="deb.sury.org-8.1.34-9"
+LABEL it.chialab.php.patches="deb.sury.org-8.1.34-9"
+RUN --mount=type=bind,from=deb-patches,target=/usr/src/deb-patches \
+	--mount=type=bind,from=patches,source=series.8.1,target=/usr/src/php-series \
 	--mount=type=bind,from=patches,source=docker-php-source-patch,target=/usr/local/bin/docker-php-source-patch \
-	docker-php-source-patch /usr/src/php-patches
+	docker-php-source-patch /usr/src/php-series /usr/src/deb-patches
 
 RUN set -eux; \
 	\
@@ -228,11 +235,13 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-# chialab: from eol/scripts.
-COPY --from=scripts docker-php-ext-configure/7.2 /usr/local/bin/docker-php-ext-configure
-COPY --from=scripts docker-php-ext-enable/7.3 /usr/local/bin/docker-php-ext-enable
-COPY --from=scripts docker-php-ext-install/8.1 /usr/local/bin/docker-php-ext-install
-COPY --from=scripts docker-php-entrypoint/fpm /usr/local/bin/docker-php-entrypoint
+# chialab: from the source commit.
+ADD --chmod=755 \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-configure \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-enable \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-install \
+	$DOCKER_PHP_SCRIPTS/docker-php-entrypoint \
+	/usr/local/bin/
 
 # enable OPcache by default (https://wiki.php.net/rfc/make_opcache_required)
 RUN docker-php-ext-enable opcache

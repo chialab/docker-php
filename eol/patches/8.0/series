@@ -1,2 +1,0 @@
-# https://github.com/php/php-src/commit/82f8f31b16a035c1b67cc253e79f7cc288f4cc20 (branch PHP-8.0-CVE-2026-109618-109619)
-0001-Avoid-state-corruption-via-bailout.patch

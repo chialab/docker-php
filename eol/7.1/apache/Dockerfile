@@ -4,6 +4,11 @@
 # with the changes marked "chialab:".
 #
 
+# chialab: deb.sury.org's patches for this version, from the Salsa commit of the build named in PHP_PATCHES.
+FROM scratch AS deb-patches
+ARG DEB_PATCHES=https://salsa.debian.org/php-team/php/-/archive/a88ccf5051d416b9f47faf85df9b7b875e111a71/php-a88ccf5051d416b9f47faf85df9b7b875e111a71.tar.gz?path=debian/patches
+ADD --unpack=true $DEB_PATCHES /
+
 FROM debian:buster-slim
 
 # chialab: Debian buster has been moved to archive.debian.org.
@@ -169,15 +174,17 @@ RUN set -eux; \
 	apt-mark manual $savedAptMark > /dev/null; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 
-# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
-COPY --from=scripts docker-php-source /usr/local/bin/
+# chialab: helper scripts are added from the source commit.
+ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/2bf33a859340cf4932a7bce5ae7bc935fc778b9d/7.1/buster/apache
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
-ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
-LABEL it.chialab.php.patches="CVE-2026-109618 CVE-2026-109619"
-RUN --mount=type=bind,from=patches,source=7.1,target=/usr/src/php-patches \
+ENV PHP_PATCHES="deb.sury.org-7.1.33-81"
+LABEL it.chialab.php.patches="deb.sury.org-7.1.33-81"
+RUN --mount=type=bind,from=deb-patches,target=/usr/src/deb-patches \
+	--mount=type=bind,from=patches,source=series.7.1,target=/usr/src/php-series \
 	--mount=type=bind,from=patches,source=docker-php-source-patch,target=/usr/local/bin/docker-php-source-patch \
-	docker-php-source-patch /usr/src/php-patches
+	docker-php-source-patch /usr/src/php-series /usr/src/deb-patches
 
 RUN set -eux; \
 	\
@@ -271,11 +278,13 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-# chialab: from eol/scripts.
-COPY --from=scripts docker-php-ext-configure/5.6 /usr/local/bin/docker-php-ext-configure
-COPY --from=scripts docker-php-ext-enable/7.1 /usr/local/bin/docker-php-ext-enable
-COPY --from=scripts docker-php-ext-install/7.1 /usr/local/bin/docker-php-ext-install
-COPY --from=scripts docker-php-entrypoint/apache /usr/local/bin/docker-php-entrypoint
+# chialab: from the source commit.
+ADD --chmod=755 \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-configure \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-enable \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-install \
+	$DOCKER_PHP_SCRIPTS/docker-php-entrypoint \
+	/usr/local/bin/
 
 # temporary "freetype-config" workaround for https://github.com/docker-library/php/issues/865 (https://bugs.php.net/bug.php?id=76324)
 RUN { echo '#!/bin/sh'; echo 'exec pkg-config "$@" freetype2'; } > /usr/local/bin/freetype-config && chmod +x /usr/local/bin/freetype-config
@@ -285,8 +294,8 @@ ENTRYPOINT ["docker-php-entrypoint"]
 # https://httpd.apache.org/docs/2.4/stopping.html#gracefulstop
 STOPSIGNAL SIGWINCH
 
-# chialab: from eol/scripts.
-COPY --from=scripts apache2-foreground /usr/local/bin/
+# chialab: from the source commit.
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/apache2-foreground /usr/local/bin/
 WORKDIR /var/www/html
 
 EXPOSE 80
