@@ -10,7 +10,7 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends libmariadbclient-dev-compat; \
     rm -rf /var/lib/apt/lists/*; \
     rm -f "$PHP_INI_DIR"/conf.d/docker-php-ext-mysql.ini "$PHP_INI_DIR"/conf.d/docker-php-ext-mysqli.ini "$PHP_INI_DIR"/conf.d/docker-php-ext-pdo_mysql.ini; \
-    docker-php-ext-configure mysql --with-mysql=/usr; \
+    docker-php-ext-configure mysql --with-mysql=/usr --with-libdir="lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
     docker-php-ext-configure mysqli --with-mysqli=/usr/bin/mysql_config; \
     docker-php-ext-configure pdo_mysql --with-pdo-mysql=/usr; \
     docker-php-ext-install mysql mysqli pdo_mysql
