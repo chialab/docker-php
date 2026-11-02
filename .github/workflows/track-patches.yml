@@ -1,0 +1,23 @@
+name: Track deb.sury.org patches
+
+# Opens an issue when deb.sury.org publishes a build of an EOL version from a newer Salsa commit
+# than the one pinned in its Dockerfiles' DEB_PATCHES.
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  track:
+    name: Compare pinned commits with deb.sury.org builds
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Check each EOL version
+        uses: ./.github/actions/track-patches

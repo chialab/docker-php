@@ -1,10 +1,13 @@
 # Docker PHP images
 
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/main.yml?branch=main&style=flat-square)](https://github.com/chialab/docker-php/actions)
+[![PHP 5 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.5.yml?branch=main&label=PHP%205&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.5.yml?query=branch%3Amain)
+[![PHP 7 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.7.yml?branch=main&label=PHP%207&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.7.yml?query=branch%3Amain)
+[![PHP 8 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.8.yml?branch=main&label=PHP%208&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.8.yml?query=branch%3Amain)
+[![latest build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.latest.yml?branch=main&label=latest&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.latest.yml?query=branch%3Amain)
 [![Source link](https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square)](https://github.com/chialab/docker-php)
 [![Authors link](https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square)](https://www.chialab.it)
 [![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php.svg?style=flat-square)](https://hub.docker.com/r/chialab/php/)
-[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/main/LICENSE)
 
 Docker images built on top of the [official PHP images](https://hub.docker.com/r/_/php/) with the addition of some common and useful extensions, installed with [mlocati/docker-php-extension-installer](https://github.com/mlocati/docker-php-extension-installer). You can find these images on the [Docker Hub](https://hub.docker.com/r/chialab/php/) (and if you're reading this file, you're probably already there).
 
@@ -14,53 +17,29 @@ For development environments, you might want to choose an [image with XDebug ins
 
 If you use Open Telemetry in your project, you may be interested in an [image with the OTel PHP extension](https://hub.docker.com/r/chialab/php-otel/).
 
-If you are really desperate and need PHP 5.6 with support for MySQL 8.x, check the [php-compat](https://hub.docker.com/r/chialab/php-compat/) image.
+If you need PHP 5.6 to connect to a MySQL 8.x server that keeps `caching_sha2_password` as its default authentication plugin, check the [php-compat](https://hub.docker.com/r/chialab/php-compat/) image.
 
 ## Available tags
-- `latest`
-- `5.6`
-- `5.6-apache`
-- `5.6-fpm`
-- `7.0`
-- `7.0-apache`
-- `7.0-fpm`
-- `7.1`
-- `7.1-apache`
-- `7.1-fpm`
-- `7.2`
-- `7.2-apache`
-- `7.2-fpm`
-- `7.3`
-- `7.3-apache`
-- `7.3-fpm`
-- `7.4`
-- `7.4-apache`
-- `7.4-fpm`
-- `8.0`
-- `8.0-apache`
-- `8.0-fpm`
-- `8.1`
-- `8.1-apache`
-- `8.1-fpm`
-- `8.2`
-- `8.2-apache`
-- `8.2-fpm`
-- `8.3`
-- `8.3-apache`
-- `8.3-fpm`
-- `8.4`
-- `8.4-apache`
-- `8.4-fpm`
-- `8.5`
-- `8.5-apache`
-- `8.5-fpm`
+- `latest`, `alpine`
+- `8.5`, `8.5-apache`, `8.5-fpm`, `8.5-alpine`, `8.5-fpm-alpine`
+- `8.4`, `8.4-apache`, `8.4-fpm`, `8.4-alpine`, `8.4-fpm-alpine`
+- `8.3`, `8.3-apache`, `8.3-fpm`, `8.3-alpine`, `8.3-fpm-alpine`
+- `8.2`, `8.2-apache`, `8.2-fpm`, `8.2-alpine`, `8.2-fpm-alpine`
+- `8.1`, `8.1-apache`, `8.1-fpm`, `8.1-alpine`, `8.1-fpm-alpine`
+- `8.0`, `8.0-apache`, `8.0-fpm`, `8.0-alpine`, `8.0-fpm-alpine`
+- `7.4`, `7.4-apache`, `7.4-fpm`, `7.4-alpine`, `7.4-fpm-alpine`
+- `7.3`, `7.3-apache`, `7.3-fpm`, `7.3-alpine`, `7.3-fpm-alpine`
+- `7.2`, `7.2-apache`, `7.2-fpm`, `7.2-alpine`, `7.2-fpm-alpine`
+- `7.1`, `7.1-apache`, `7.1-fpm`, `7.1-alpine`, `7.1-fpm-alpine`
+- `7.0`, `7.0-apache`, `7.0-fpm`
+- `5.6`, `5.6-apache`, `5.6-fpm`
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen maintenance.
 
 ### Security backports for EOL versions
 The official images of unsupported PHP versions (5.6 to 8.1) no longer receive security fixes. For those versions we rebuild PHP from the official images' Dockerfiles (see [`eol/`](eol/)), on the same OS release, with security patches applied to the PHP sources. The image layout doesn't change, so `docker-php-ext-*` and `install-php-extensions` keep working.
 
-The `PHP_PATCHES` environment variable and the `it.chialab.php.patches` label list what has been applied. `PHP_VERSION` and `php -v` still report the upstream version, so vulnerability scanners may keep flagging fixed issues.
+The patches are the security and bug-fix backports maintained for [deb.sury.org](https://deb.sury.org), taken from the Debian PHP team's [packaging repository](https://salsa.debian.org/php-team/php). Debian packaging changes, changed defaults and deb.sury.org's version-check telemetry are left out. The `PHP_PATCHES` environment variable and the `it.chialab.php.patches` label name the deb.sury.org build the patches come from (e.g. `deb.sury.org-7.4.33-31`). `PHP_VERSION` and `php -v` still report the upstream version, so vulnerability scanners may keep flagging fixed issues.
 
 ## Installed extensions
 The following modules and extensions have been enabled,
@@ -109,4 +88,4 @@ Pull requests are welcome, too! 😁 Please, run `make build` and `make test` be
 
 ## License
 
-Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/master/LICENSE) license.
+Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/main/LICENSE) license.

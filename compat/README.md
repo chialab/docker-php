@@ -1,30 +1,20 @@
-<p align="center">
-    <a href="https://www.chialab.io/p/docker-php">
-        <img alt="Docker PHP Images logo" width="144" height="144" src="https://raw.githack.com/chialab/docker-php/master/logo.svg" />
-    </a>
-</p>
+# Docker PHP images: compat
 
-<p align="center">
-  <strong>Docker PHP images</strong>
-</p>
-
-<p align="center">
-    <a href="https://github.com/chialab/docker-php/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/chialab/docker-php/main.yml?branch=main&style=flat-square"></a>
-    <a href="https://github.com/chialab/docker-php"><img alt="Source link" src="https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square"></a>
-    <a href="https://www.chialab.it"><img alt="Authors link" src="https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square"></a>
-    <a href="https://hub.docker.com/r/chialab/php-pcov/"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/chialab/php-pcov.svg?style=flat-square"></a>
-    <a href="https://github.com/chialab/docker-php/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square"></a>
-</p>
-
----
+[![PHP 5 build](https://img.shields.io/github/actions/workflow/status/chialab/docker-php/test.5.yml?branch=main&label=PHP%205&style=flat-square)](https://github.com/chialab/docker-php/actions/workflows/test.5.yml?query=branch%3Amain)
+[![Source link](https://img.shields.io/badge/Source-GitHub-lightgrey.svg?style=flat-square)](https://github.com/chialab/docker-php)
+[![Authors link](https://img.shields.io/badge/Authors-Chialab-lightgrey.svg?style=flat-square)](https://www.chialab.it)
+[![Docker Pulls](https://img.shields.io/docker/pulls/chialab/php-compat.svg?style=flat-square)](https://hub.docker.com/r/chialab/php-compat/)
+[![License](https://img.shields.io/github/license/chialab/docker-php.svg?style=flat-square)](https://github.com/chialab/docker-php/blob/main/LICENSE)
 
 Compatibility docker images.
 
 ### PHP 5.6
 
-Built from the latest official PHP 5.6 Dockerfiles ([this](https://github.com/docker-library/php/tree/783878384a8f3953ed571e5a34ba0fe546726c85) commit),
-with PHP compiled to use MariaDB's `libmysqlclient` connector. This fixes connections with MySQL 8.0+, which uses a default
-collation not recognized by the official image's `mysqlnd` connector (`utf8mb4`).
+Built on top of [`chialab/php:5.6`](../README.md) (same tag), with the `mysql`, `mysqli` and `pdo_mysql` extensions rebuilt
+against MariaDB's `libmysqlclient` connector instead of `mysqlnd`. Unlike `mysqlnd` 5.6, it can connect to MySQL 8.0+ servers
+whose default authentication plugin is `caching_sha2_password`, as long as the account uses `mysql_native_password`. Accounts
+using `caching_sha2_password` aren't supported, and the `mysqlnd`-only APIs (such as `mysqli_stmt::get_result()`) aren't
+available.
 
 ## Available tags
 - `5.6`
@@ -79,4 +69,4 @@ Pull requests are welcome, too! 😁 Please, run `make build` and `make test` be
 
 ## License
 
-Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/master/LICENSE) license.
+Docker PHP Images is released under the [MIT](https://github.com/chialab/docker-php/blob/main/LICENSE) license.

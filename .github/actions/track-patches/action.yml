@@ -1,0 +1,16 @@
+name: Track deb.sury.org patches
+description: >
+  For each EOL version in eol/, compares the Salsa commit pinned in its Dockerfiles' DEB_PATCHES
+  with the one deb.sury.org last built from, and opens or updates an issue when they differ.
+
+inputs:
+  token:
+    description: Token used to read and write the repository's issues.
+    default: ${{ github.token }}
+  distribution:
+    description: Debian release whose deb.sury.org source index is read.
+    default: trixie
+
+runs:
+  using: node24
+  main: index.mjs

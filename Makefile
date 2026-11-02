@@ -58,7 +58,7 @@ build-base:
 		exit 1; \
 	fi
 	@echo " =====> Building $(BASE_IMAGE)..."
-	docker image build --quiet --build-context patches=eol/patches --build-context scripts=eol/scripts -t $(BASE_IMAGE) $(EOL_DIR)
+	docker image build --quiet --build-context patches=eol/patches -t $(BASE_IMAGE) $(EOL_DIR)
 
 test:
 	@echo -e "=====> Testing loaded extensions... \c"

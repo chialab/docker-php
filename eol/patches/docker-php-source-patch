@@ -1,12 +1,29 @@
 #!/bin/sh
 set -eu
 
-# Applies the patches listed in "$1/series" to /usr/src/php.tar.xz and repacks it in place, so the
-# official build and any later "docker-php-ext-install" compile the patched sources.
+# Applies the patches listed in the series file "$1" to /usr/src/php.tar.xz and repacks it in
+# place, so the official build and any later "docker-php-ext-install" compile the patched sources.
+# "$2" holds deb.sury.org's patches, as unpacked from the Salsa archive.
 
-patchDir="$1"
+series="$1"
+set -- "$2"/*/debian/patches
+if [ $# -ne 1 ] || [ ! -f "$1/series" ]; then
+	echo >&2 "error: no debian/patches with a series in the Salsa archive"
+	exit 1
+fi
+debDir="$1"
 src=/usr/src/php.tar.xz
 work="$(mktemp -d)"
+
+# every patch of deb.sury.org's series must be listed, applied or commented out, so a new revision
+# can't add patches nobody has reviewed
+grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$debDir/series" | awk '{ print $1 }' > "$work/deb"
+sed -n -e '/^[^#[:space:]]/p' -e 's/^# [a-z]*: \([^ ]*\.patch\)$/\1/p' "$series" > "$work/ours"
+if ! diff -u "$work/deb" "$work/ours" > "$work/diff"; then
+	echo >&2 "error: $series doesn't match deb.sury.org's series:"
+	cat >&2 "$work/diff"
+	exit 1
+fi
 
 installed=
 # busybox's patch (old Alpine releases) lacks -d and the long options used below
@@ -24,9 +41,9 @@ fi
 mkdir "$work/php"
 tar -xJf "$src" -C "$work/php" --strip-components=1
 
-grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$patchDir/series" | while read -r p; do
+grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$series" | while read -r p; do
 	echo "Applying $p"
-	patch -d "$work/php" -p1 --forward --no-backup-if-mismatch < "$patchDir/$p"
+	patch -d "$work/php" -p1 --forward --no-backup-if-mismatch < "$debDir/$p"
 done
 
 tar -cJf "$src" -C "$work" php

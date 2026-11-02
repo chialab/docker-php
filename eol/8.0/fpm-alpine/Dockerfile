@@ -4,6 +4,11 @@
 # with the changes marked "chialab:".
 #
 
+# chialab: deb.sury.org's patches for this version, from the Salsa commit of the build named in PHP_PATCHES.
+FROM scratch AS deb-patches
+ARG DEB_PATCHES=https://salsa.debian.org/php-team/php/-/archive/abebea27da1d5cf90a0e83ab81ea3e708886aebb/php-abebea27da1d5cf90a0e83ab81ea3e708886aebb.tar.gz?path=debian/patches
+ADD --unpack=true $DEB_PATCHES /
+
 FROM alpine:3.16
 
 # dependencies required for running "phpize"
@@ -87,15 +92,17 @@ RUN set -eux; \
 	\
 	apk del --no-network .fetch-deps
 
-# chialab: helper scripts are shared by all eol/ images, see eol/scripts.
-COPY --from=scripts docker-php-source /usr/local/bin/
+# chialab: helper scripts are added from the source commit.
+ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/df4636cac888ec860ccbf0f200637b88a2fb22ab/8.0/alpine3.16/fpm
+ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
-ENV PHP_PATCHES="CVE-2026-109618 CVE-2026-109619"
-LABEL it.chialab.php.patches="CVE-2026-109618 CVE-2026-109619"
-RUN --mount=type=bind,from=patches,source=8.0,target=/usr/src/php-patches \
+ENV PHP_PATCHES="deb.sury.org-8.0.30-25"
+LABEL it.chialab.php.patches="deb.sury.org-8.0.30-25"
+RUN --mount=type=bind,from=deb-patches,target=/usr/src/deb-patches \
+	--mount=type=bind,from=patches,source=series.8.0,target=/usr/src/php-series \
 	--mount=type=bind,from=patches,source=docker-php-source-patch,target=/usr/local/bin/docker-php-source-patch \
-	docker-php-source-patch /usr/src/php-patches
+	docker-php-source-patch /usr/src/php-series /usr/src/deb-patches
 
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
@@ -210,11 +217,13 @@ RUN set -eux; \
 # smoke test
 	php --version
 
-# chialab: from eol/scripts.
-COPY --from=scripts docker-php-ext-configure/7.2 /usr/local/bin/docker-php-ext-configure
-COPY --from=scripts docker-php-ext-enable/7.3 /usr/local/bin/docker-php-ext-enable
-COPY --from=scripts docker-php-ext-install/7.4 /usr/local/bin/docker-php-ext-install
-COPY --from=scripts docker-php-entrypoint/fpm /usr/local/bin/docker-php-entrypoint
+# chialab: from the source commit.
+ADD --chmod=755 \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-configure \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-enable \
+	$DOCKER_PHP_SCRIPTS/docker-php-ext-install \
+	$DOCKER_PHP_SCRIPTS/docker-php-entrypoint \
+	/usr/local/bin/
 
 # sodium was built as a shared module (so that it can be replaced later if so desired), so let's enable it too (https://github.com/docker-library/php/issues/598)
 RUN docker-php-ext-enable sodium

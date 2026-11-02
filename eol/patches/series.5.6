@@ -1,0 +1,272 @@
+# Allow-list over deb.sury.org's debian/patches/series, at the Salsa commit in DEB_PATCHES
+# (eol/<version>/*/Dockerfile). Every patch of that series appears here in its order; the
+# commented-out ones are left out:
+# - packaging: Debian paths, defaults and packaging;
+# - build: build-system changes for other libraries or toolchains than our bases';
+# - behaviour: changed defaults or new features;
+# - tests: test-only changes that need a left-out patch;
+# - telemetry: deb.sury.org's DNS version check, which reports the PHP version to its server.
+# packaging: 0001-libtool_fixes.patch
+# packaging: 0002-static_openssl.patch
+# packaging: 0003-debian_quirks.patch
+# packaging: 0004-libtool2.2.patch
+# packaging: 0005-we_WANT_libtool.patch
+# packaging: 0006-php-5.4.9-phpinfo.patch
+# packaging: 0007-extension_api.patch
+# packaging: 0008-no_apache_installed.patch
+# packaging: 0009-recode_is_shared.patch
+# packaging: 0010-proc_open.patch
+# packaging: 0011-php.ini_securitynotes.patch
+# packaging: 0012-php-5.4.7-libdb.patch
+# packaging: 0013-use_embedded_timezonedb.patch
+# packaging: 0014-force_libmysqlclient_r.patch
+# packaging: 0015-strcmp_null-OnUpdateErrorLog.patch
+# packaging: 0016-dont-gitclean-in-build.patch
+# packaging: 0017-qdbm-is-usr_include_qdbm.patch
+# packaging: 0018-session_save_path.patch
+# packaging: 0019-php-fpm-man-section-and-cleanup.patch
+# packaging: 0020-fpm-config.patch
+# packaging: 0021-php-fpm-sysconfdir.patch
+# packaging: 0022-lp564920-fix-big-files.patch
+# packaging: 0023-temporary-path-fixes-for-multiarch.patch
+# packaging: 0024-hurd-noptrace.patch
+# packaging: 0025-php-5.3.9-mysqlnd.patch
+# packaging: 0026-php-5.3.9-gnusrc.patch
+# packaging: 0027-php-5.3.3-macropen.patch
+# packaging: 0028-php-5.2.4-norpath.patch
+# packaging: 0029-php-5.2.4-embed.patch
+# packaging: 0030-php-fpm-m68k.patch
+# packaging: 0031-expose_all_built_and_installed_apis.patch
+# packaging: 0032-Use-system-timezone.patch
+# packaging: 0033-zlib-largefile-function-renaming.patch
+# packaging: 0034-php-fpm-do-reload-on-SIGHUP.patch
+# packaging: 0035-php-5.4.8-ldap_r.patch
+# packaging: 0036-php-5.4.9-fixheader.patch
+# packaging: 0037-php-5.6.0-noNO.patch
+# packaging: 0038-php-5.6.0-oldpcre.patch
+# packaging: 0039-hack-phpdbg-to-explicitly-link-with-libedit.patch
+# packaging: 0040-Fix-ZEND_MM_ALIGNMENT-on-m64k.patch
+# packaging: 0041-Add-patch-to-remove-build-timestamps-from-generated-.patch
+# packaging: 0042-Remove-W3C-validation-icon-to-not-expose-the-reader-.patch
+# packaging: 0043-strtod_arm_fix.patch
+# packaging: 0044-sybase-alias.patch
+# packaging: 0045-use_embedded_timezonedb_fixes.patch
+# packaging: 0046-php-5.4.0-dlopen.patch
+# packaging: 0047-Disable-apxs2-module-activation-on-sapi-install.patch
+# packaging: 0048-Remove-warning-about-mysql-library-minor-version-mis.patch
+# packaging: 0049-XMLRPC-EPI-library-has-to-be-linked-as-lxmlrpc-epi.patch
+# packaging: 0050-Don-t-put-INSTALL_ROOT-into-phar.phar-exec-stanza.patch
+# packaging: 0051-make-opcache-lockfile-path-configurable.patch
+# packaging: 0052-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
+# build: 0053-Adjust-tidy-extension-for-tidy-html5.patch
+# build: 0054-Fix-check-for-CURL-include-in-M-A-directory.patch
+# build: 0055-Use-OpenSSL-1.1-compatibility-patch-when-built-with-.patch
+0056-Fix-PHP-bug-64827-Segfault-in-zval_mark_grey-zend_gc.patch
+# build: 0057-Use-pkg-config-for-FreeType2-detection.patch
+0058-Fix-bug-77396-Null-Pointer-Dereference-in-phar_creat.patch
+0059-Fix-77431-SplFileInfo-__construct-accepts-NUL-bytes.patch
+0060-Fix-test.patch
+0061-Fix-integer-overflows-on-32-bits.patch
+0062-Fix-bug-77540-Invalid-Read-on-exif_process_SOFn.patch
+0063-Fix-bug-77563-Uninitialized-read-in-exif_process_IFD.patch
+0064-Fix-test-error-message.patch
+0065-Fix-bug-77586-phar_tar_writeheaders_int-buffer-overf.patch
+0066-Fix-test.patch
+0067-Fix-bug-77630-safer-rename-procedure.patch
+0068-Fix-test-portability.patch
+0069-Update-NEWS.patch
+# build: 0070-Use-pkg-config-for-ICU-as-the-old-icu-config-has-bee.patch
+# build: 0071-ext-intl-Use-C-namespaces-for-ICU-63.1.patch
+# build: 0072-Fix-rl_completion_matches-compilation-with-newer-lib.patch
+0073-SQLite3-add-DEFENSIVE-config-for-SQLite-3.26.0-as-a-.patch
+0074-Fix-bug-77753-Heap-buffer-overflow-in-php_ifd_get32s.patch
+0075-Fixed-bug-77831-Heap-buffer-overflow-in-exif_iif_add.patch
+0076-Pointer-arithmetic-on-void-pointers-is-illegal.patch
+# build: 0077-Amend-C-11-for-intl-compilation-on-older-distributio.patch
+0078-Skip-test-on-PostgreSQL-10.patch
+0079-Fix-tests-wrt.-internationalization.patch
+0080-Fix-bug-77950-Heap-buffer-overflow-in-_estrndup-via-.patch
+# build: 0081-Fix-potential-expanded-command-line-too-long-build-e.patch
+0082-Fix-77973-Uninitialized-read-in-gdImageCreateFromXbm.patch
+0083-Fix-bug-78069-Out-of-bounds-read-in-iconv.c-_php_ico.patch
+0084-fix-test-output.patch
+0085-Fix-bug-77988-heap-buffer-overflow-on-php_jpg_get16.patch
+0086-Fix-bug-77967-Bypassing-open_basedir-restrictions-vi.patch
+# tests: 0087-fix-tests.patch
+0088-Upgrade-to-SQLite-3.28.0.patch
+0089-Add-support-for-xfail-to-phpt-SKIPIF-sections.patch
+0090-xfail-phar-tests.patch
+0091-Fix-bug-78222-heap-buffer-overflow-on-exif_scan_thum.patch
+0092-Fix-bug-78256-heap-buffer-overflow-on-exif_process_u.patch
+0093-Fix-77919-Potential-UAF-in-Phar-RSHUTDOWN.patch
+# build: 0094-Make-use-of-pkg-config-for-libxml2.patch
+0095-Fix-75457-heap-use-after-free-in-php7.0.25.patch
+0096-Fix-CVE-2019-13224-don-t-allow-different-encodings-f.patch
+0097-NEWS.patch
+0098-relax-test-offset-may-be-different-on-various-system.patch
+0099-Fix-erroneous-test-expectation.patch
+0100-Fix-getColumnMeta-test.patch
+0101-test-fixes.patch
+0102-Fixed-test-on-32-bit-systems.patch
+0103-Prevent-test-case-failure.patch
+0104-Fix-bug-78599-env_path_info-underflow-can-lead-to-RC.patch
+0105-add-NEWS-entry.patch
+0106-Fix-78878-Buffer-underflow-in-bc_shift_addsub.patch
+0107-Fix-78862-link-silently-truncates-after-a-null-byte-.patch
+0108-Fix-78863-DirectoryIterator-class-silently-truncates.patch
+0109-Fix-bug-78793.patch
+0110-Fixed-bug-78910.patch
+0111-Fix-tests.patch
+0112-fork-tests.patch
+0113-Fix-tests.patch
+0114-fix-test.patch
+0115-Extend-test-latest-cURL-ships-also-with-smb-and-smbs.patch
+0116-Sync-test-for-libcurl-7.64.0.patch
+0117-Sync-test-with-changes-in-libcurl-7.64.0.patch
+0118-Fix-ext-mysql-tests.patch
+0119-Clean-up-server-tests.php-remains.patch
+0120-refix-test.patch
+0121-Fix-test-when-it-s-run-on-another-drive.patch
+0122-Fix-test.patch
+0123-fix-remaining-tests-for-Opcache-runs.patch
+0124-Fix-79099-OOB-read-in-php_strip_tags_ex.patch
+0125-Fix-bug-79037-global-buffer-overflow-in-mbfl_filt_co.patch
+0126-update-NEWS.patch
+0127-Fix-MSVC-build.patch
+0128-More-checks-for-php_strip_tags_ex.patch
+0129-Fix-test-cases.patch
+0130-Fix-bug-79221-Null-Pointer-Dereference-in-PHP-Sessio.patch
+0131-Fix-bug-79082-Files-added-to-tar-with-Phar-buildFrom.patch
+0132-NEWS.patch
+0133-renew-certs-for-openssl-tests.patch
+# build: 0134-Use-pkg-config-for-PHP_SETUP_LIBXML.patch
+0135-Fixed-bug-79282.patch
+0136-Fix-test.patch
+0137-fix-test.patch
+0138-Fix-bug-79329-get_headers-should-not-accept-0.patch
+0139-Update-NEWS.patch
+0140-Fix-bug-79330-make-all-execution-modes-consistent-in.patch
+0141-Fix-bug-79465-use-unsigneds-as-indexes.patch
+0142-NEWS.patch
+0143-ZTS.patch
+0144-Fix-bug-72333-fwrite-on-non-blocking-SSL-sockets-doe.patch
+0145-Backport-the-aarch64-ZEND_SIGNED_MULTIPLY_LONG-assem.patch
+0146-Fix-Bug-79296-ZipArchive-open-fails-on-empty-file.patch
+0147-Backports-from-7.2.31.patch
+# behaviour: 0148-Allow-numeric-UG-ID-in-FPM-listen.-owner-group.patch
+0149-Fix-79797-Use-of-freed-hash-key-in-the-phar_parse_zi.patch
+0150-Fix-79877-getimagesize-function-silently-truncates-a.patch
+0151-ZTS-fix.patch
+# build: 0152-Fixed-phpdbg-build-broken-when-dtrace-enabled.patch
+0153-Do-not-decode-cookie-names-anymore.patch
+0154-NEWS.patch
+# build: 0155-Add-pkg-config-m4-files-to-phpize-script.patch
+# build: 0156-In-phpize-also-copy-config.guess-config.sub-ltmain.s.patch
+0157-Fix-77423-parse_url-will-deliver-a-wrong-host-to-use.patch
+0158-NEWS.patch
+0159-Alternative-fix-for-bug-77423.patch
+0160-Fix-bug-80672-Null-Dereference-in-SoapClient.patch
+0161-Fix-build.patch
+# build: 0162-Use-libenchant-2-when-available.patch
+# build: 0163-remove-deprecated-call-and-deprecate-function-to-be-.patch
+0164-Patch-mysql-with-utf8mb4-character-set.patch
+# packaging: 0165-Show-packaging-credits.patch
+# packaging: 0166-Allow-printing-credits-buffer-larger-than-4k.patch
+0167-Fix-80710-imap_mail_compose-header-injection.patch
+0168-Add-missing-NEWS-entry-for-80710.patch
+# packaging: 0169-Don-t-close-the-credits-buffer-file-descriptor-too-e.patch
+0170-Fixed-bug-73512-Fails-to-find-firebird-headers.patch
+0171-Fix-81122-SSRF-bypass-in-FILTER_VALIDATE_URL.patch
+0172-Fix-warning.patch
+0173-Fix-bug-76488-Memory-leak-when-fetching-a-BLOB-field.patch
+0174-Fix-76452-Crash-while-parsing-blob-data-in-firebird_.patch
+0175-Fix-76450-SIGSEGV-in-firebird_stmt_execute.patch
+0176-Fix-76449-SIGSEGV-in-firebird_handle_doer.patch
+0177-Fix-76448-Stack-buffer-overflow-in-firebird_info_cb.patch
+0178-Update-NEWS.patch
+0179-Fixes-65689.-PDO_Firebrid-exec-does-not-free-allocat.patch
+0180-fix-ibase-handle-initialization-mostly-compiler-warn.patch
+0181-adapt-for-5.6-without-ZEND_ULONG_MAX.patch
+0182-Fix-81211-Symlinks-are-followed-when-creating-PHAR-a.patch
+0183-Fix-test.patch
+0184-NEWS.patch
+0185-Fix-bug-81026-PHP-FPM-oob-R-W-in-root-process-leadin.patch
+0186-NEWS.patch
+0187-Fix-81420-ZipArchive-extractTo-extracts-outside-of-d.patch
+0188-NEWS.patch
+0189-Fix-79971-special-character-is-breaking-the-path-in-.patch
+0190-fix-new-tests.patch
+0191-NEWS.patch
+0192-fix-ZTS.patch
+# build: 0193-Add-minimal-OpenSSL-3.0-patch.patch
+# build: 0194-Use-true-false-instead-of-TRUE-FALSE-in-intl.patch
+# build: 0195-Change-UBool-to-bool-for-equality-operators-in-ICU-7.patch
+0196-Fix-81720-Uninitialized-array-in-pg_query_params-lea.patch
+0197-Fix-bug-81719-mysqlnd-pdo-password-buffer-overflow.patch
+0198-NEWS.patch
+0199-Fix-bug-79589-ssl3_read_n-unexpected-eof-while-readi.patch
+0200-Fix-81727-Don-t-mangle-HTTP-variable-names-that-clas.patch
+0201-Fix-81726-phar-wrapper-DOS-when-using-quine-gzip-fil.patch
+0202-Fix-regression-introduced-by-fixing-bug-81726.patch
+0203-fix-NEWS.patch
+0204-Fix-81740-PDO-quote-may-return-unquoted-string.patch
+0205-adapt-test-for-5.x.patch
+0206-NEWS.patch
+0207-crypt-Fix-validation-of-malformed-BCrypt-hashes.patch
+0208-crypt-Fix-possible-buffer-overread-in-php_crypt.patch
+0209-Fix-array-overrun-when-appending-slash-to-paths.patch
+0210-NEWS.patch
+0211-Increase-random-bytes-in-HTTP-Digest-authentication-.patch
+0212-add-cve.patch
+0213-Fix-buffer-mismanagement-in-phar_dir_read.patch
+0214-Sanitize-libxml2-globals-before-parsing.patch
+0215-NEWS.patch
+0216-fix-backport.patch
+0217-Sanitize-libxml2-globals-before-parsing-VC11-compati.patch
+0218-Fix-buffer-mismanagement-in-phar_dir_read-VC11-compa.patch
+0219-Fix-GHSA-wpj3-hf5j-x4v4-__Host-__Secure-cookie-bypas.patch
+0220-NEWS.patch
+0221-Fix-bug-GHSA-q6x7-frmf-grcw-password_verify-can-erro.patch
+0222-NEWS.patch
+# build: 0223-Add-missing-declaration-of-mbfl_filt_put_invalid_cha.patch
+0224-Fix-GHSA-w8qr-v226-r27w.patch
+0225-NEWS.patch
+0226-Fix-GHSA-3qgc-jrrr-25jv.patch
+0227-Fix-GHSA-3qgc-jrrr-25jv-VC11.patch
+0228-NEWS-Add-backport-from-8.1.29.patch
+0229-Fix-GHSA-9pqp-7h25-4f32.patch
+0230-Fix-GHSA-p99j-rfp4-xqvq.patch
+0231-Fix-GHSA-94p6-54jq-9mwp.patch
+0232-Skip-GHSA-9pqp-7h25-4f32-test-on-Windows.patch
+0233-NEWS-for-8.1.30-backports.patch
+0234-adapt-GHSA-9pqp-7h25-4f32-test-for-7.x.patch
+0235-Fix-GHSA-c5f2-jwm7-mmq2-stream-HTTP-fulluri-CRLF-inj.patch
+0236-Fix-GHSA-g665-fm4p-vhff-OOB-access-in-ldap_escape.patch
+0237-Fix-GHSA-r977-prxv-hc43.patch
+0238-Fix-74267-segfault-with-streams-and-invalid-data.patch
+0239-Fix-GHSA-4w77-75f9-2c8w.patch
+0240-NEWS-for-8.1.31-backports.patch
+# build: 0241-Force-POSIX-readdir_r-semantics.patch
+# build: 0242-Disable-the-GCC-major-version-check-in-configure.patch
+# build: 0243-Force-using-POSIX-threads-on-Linux.patch
+# build: 0244-Add-ifdef-guards-to-main-php_config.h.in.patch
+# build: 0245-Actually-use-ICU_CXXFLAGS-when-compiling-ext-intl.patch
+# build: 0246-Fix-autoconf-errors.patch
+# build: 0247-Fix-AC_PROG_SED-error-and-other-autoconf-warnings.patch
+0248-Fix-missing-includes-in-litespeed-build.patch
+# build: 0249-Add-missing-LSAPI_No_Check_ppid-prototype-to-lsapili.patch
+# build: 0250-Fix-the-install-rules-for-litespeed-SAPI.patch
+# telemetry: 0251-Add-minimal-privacy-preserving-secure-DNS-telemetry-.patch
+# build: 0252-Use-__attribute__-__unused__-directly-instead-of-ATT.patch
+0253-GHSA-m33r-qmcv-p97q-soap-Fix-use-after-free-after-he.patch
+0254-GHSA-hmxp-6pc4-f3vv-soap-Fix-broken-Apache-map-value.patch
+0255-only-test-for-GHSA-96wq-48vp-hh57.patch
+0256-NEWS-from-8.2.31.patch
+0257-GHSA-7qg2-v9fj-4mwv-fpm-XSS-within-status-endpoint.patch
+0258-relax-test-may-fail-when-script-not-in-status-page.patch
+0259-fix-test-name.patch
+0260-ext-openssl-openssl_encrypt-zend-mm-heap-overflow-on.patch
+0261-Avoid-state-corruption-via-bailout.patch
+0262-Fix-repeated-warning-for-file-uploads-limit-exceedin.patch
+0263-Introduce-max_multipart_body_parts-INI.patch
+0264-Add-CVE-2023-0662-to-NEWS.patch
