@@ -21,6 +21,7 @@ If you need PHP 5.6 to connect to a MySQL 8.x server that keeps `caching_sha2_pa
 
 ## Available tags
 - `latest`, `alpine`
+- `8.6`, `8.6-apache`, `8.6-fpm`, `8.6-alpine`, `8.6-fpm-alpine`
 - `8.5`, `8.5-apache`, `8.5-fpm`, `8.5-alpine`, `8.5-fpm-alpine`
 - `8.4`, `8.4-apache`, `8.4-fpm`, `8.4-alpine`, `8.4-fpm-alpine`
 - `8.3`, `8.3-apache`, `8.3-fpm`, `8.3-alpine`, `8.3-fpm-alpine`
