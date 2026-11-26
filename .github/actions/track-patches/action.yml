@@ -1,7 +1,8 @@
 name: Track deb.sury.org patches
 description: >
-  For each EOL version in eol/, compares the Salsa commit pinned in its Dockerfiles' DEB_PATCHES
-  with the one deb.sury.org last built from, and opens or updates an issue when they differ.
+  For each EOL version in eol/, compares the deb.sury.org revision in its Dockerfiles' PHP_PATCHES
+  with deb.sury.org's latest build, and opens or updates an issue naming the Salsa commit with the
+  build's debian/patches when they differ.
 
 inputs:
   token:

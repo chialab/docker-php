@@ -1,7 +1,7 @@
 name: Track deb.sury.org patches
 
-# Opens an issue when deb.sury.org publishes a build of an EOL version from a newer Salsa commit
-# than the one pinned in its Dockerfiles' DEB_PATCHES.
+# Opens an issue when deb.sury.org publishes a build of an EOL version with a revision other than
+# the one in its Dockerfiles' PHP_PATCHES.
 
 on:
   schedule:

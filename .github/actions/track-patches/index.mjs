@@ -1,7 +1,10 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
+const SURY = 'https://packages.sury.org/php';
 const SALSA = 'https://salsa.debian.org/php-team/php';
 const SALSA_API = 'https://salsa.debian.org/api/v4/projects/php-team%2Fphp';
 
@@ -50,59 +53,120 @@ function eolVersions() {
         .sort();
 }
 
-/** The Salsa commit pinned in DEB_PATCHES, which every flavour of the version must agree on. */
-function pinnedCommit(version) {
-    const commits = new Set();
+/** The value of `pattern`'s first group, which every flavour's Dockerfile of the version must agree on. */
+function pinned(version, pattern, what) {
+    const values = new Set();
     for (const flavor of readdirSync(join('eol', version))) {
         const dockerfile = join('eol', version, flavor, 'Dockerfile');
-        const match = readFileSync(dockerfile, 'utf8').match(/DEB_PATCHES=\S*\/archive\/([0-9a-f]{40})\//);
+        const match = readFileSync(dockerfile, 'utf8').match(pattern);
         if (!match) {
-            throw new Error(`${dockerfile} has no DEB_PATCHES commit`);
+            throw new Error(`${dockerfile} has no ${what}`);
         }
-        commits.add(match[1]);
+        values.add(match[1]);
     }
-    if (commits.size !== 1) {
-        throw new Error(`the Dockerfiles pin different commits: ${[...commits].join(', ')}`);
+    if (values.size !== 1) {
+        throw new Error(`the Dockerfiles pin different ${what}s: ${[...values].join(', ')}`);
     }
-    return [...commits][0];
+    return [...values][0];
 }
 
-/** Package name → version, from deb.sury.org's index of source packages. */
+/** Package name → its version and debian tarball URL, from deb.sury.org's index of source packages. */
 async function latestBuilds() {
-    const response = await download(`https://packages.sury.org/php/dists/${distribution}/main/source/Sources.gz`);
+    const response = await download(`${SURY}/dists/${distribution}/main/source/Sources.gz`);
     const index = gunzipSync(Buffer.from(await response.arrayBuffer())).toString('utf8');
     const builds = new Map();
     for (const stanza of index.split(/\n\s*\n/)) {
         const name = stanza.match(/^Package: (\S+)$/m)?.[1];
         const version = stanza.match(/^Version: (\S+)$/m)?.[1];
-        if (name && version && !builds.has(name)) {
-            builds.set(name, version);
+        const directory = stanza.match(/^Directory: (\S+)$/m)?.[1];
+        const tarball = stanza.match(/^ [0-9a-f]{32} \d+ (\S+\.debian\.tar\.xz)$/m)?.[1];
+        if (name && version && directory && tarball && !builds.has(name)) {
+            builds.set(name, { version, tarball: `${SURY}/${directory}/${tarball}` });
         }
     }
     return builds;
 }
 
-/**
- * Splits a build version such as "1:7.4.33-31+0~20261021.121+debian13~1.gbpe9c428" into its
- * revision without epoch ("7.4.33-31") and the start of the Salsa commit it was built from
- * ("e9c428").
- */
-function parseBuild(version) {
-    const match = version.match(/^(?:\d+:)?([^+]+)\+.*\.gbp([0-9a-f]+)$/);
-    return match && { revision: match[1], commitPrefix: match[2] };
+function parseSeries(text) {
+    return text
+        .split('\n')
+        .map((line) => line.trim().split(/\s+/)[0])
+        .filter((name) => name && !name.startsWith('#'));
 }
 
-async function fullCommit(prefix) {
-    const response = await download(`${SALSA_API}/repository/commits/${prefix}`);
-    return (await response.json()).id;
+/** The git tree id and series of the build's debian/patches, as Salsa would hash that directory. */
+async function builtPatches(build) {
+    const dir = mkdtempSync(join(process.env.RUNNER_TEMP || tmpdir(), 'track-patches-'));
+    try {
+        const response = await download(build.tarball);
+        writeFileSync(join(dir, 'debian.tar.xz'), Buffer.from(await response.arrayBuffer()));
+        execFileSync('tar', ['-xJf', 'debian.tar.xz', 'debian/patches'], { cwd: dir });
+        const git = (...args) => execFileSync('git', args, { cwd: dir, encoding: 'utf8' }).trim();
+        git('init', '--quiet');
+        git('add', '--force', 'debian/patches');
+        return {
+            tree: git('write-tree', '--prefix=debian/patches/'),
+            series: parseSeries(readFileSync(join(dir, 'debian', 'patches', 'series'), 'utf8')),
+        };
+    } finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+}
+
+async function salsaList(path) {
+    const items = [];
+    for (let page = 1; ; page++) {
+        const response = await download(`${SALSA_API}${path}&per_page=100&page=${page}`);
+        items.push(...(await response.json()));
+        if (!response.headers.get('x-next-page')) {
+            return items;
+        }
+    }
+}
+
+/** The newest of the last 100 commits touching debian/patches on the version's branch whose debian/patches is `tree`. */
+async function matchingCommit(version, tree) {
+    const branch = encodeURIComponent(`debian/main/${version}`);
+    const response = await download(`${SALSA_API}/repository/commits?ref_name=${branch}&path=debian/patches&per_page=100`);
+    for (const commit of await response.json()) {
+        const entries = await salsaList(`/repository/tree?path=debian&ref=${commit.id}`);
+        if (entries.find((entry) => entry.name === 'patches')?.id === tree) {
+            return commit.id;
+        }
+    }
+    return null;
 }
 
 async function seriesPatches(commit) {
     const response = await download(`${SALSA}/-/raw/${commit}/debian/patches/series`);
-    return (await response.text())
-        .split('\n')
-        .map((line) => line.trim().split(/\s+/)[0])
-        .filter((name) => name && !name.startsWith('#'));
+    return parseSeries(await response.text());
+}
+
+// Matched in order on names without the number: deb.sury.org renumbers the series, and names such
+// as Fix-test.patch repeat, so neither exact names nor a set of bare names tell which one changed.
+function diffSeries(before, after) {
+    const bare = (name) => name.replace(/^\d+-/, '');
+    const a = before.map(bare);
+    const b = after.map(bare);
+    const common = Array.from({ length: a.length + 1 }, () => new Uint16Array(b.length + 1));
+    for (let i = a.length - 1; i >= 0; i--) {
+        for (let j = b.length - 1; j >= 0; j--) {
+            common[i][j] = a[i] === b[j] ? common[i + 1][j + 1] + 1 : Math.max(common[i + 1][j], common[i][j + 1]);
+        }
+    }
+    const added = [];
+    const removed = [];
+    for (let i = 0, j = 0; i < a.length || j < b.length; ) {
+        if (i < a.length && j < b.length && a[i] === b[j]) {
+            i++;
+            j++;
+        } else if (j === b.length || (i < a.length && common[i + 1][j] >= common[i][j + 1])) {
+            removed.push(before[i++]);
+        } else {
+            added.push(after[j++]);
+        }
+    }
+    return { added, removed };
 }
 
 async function openIssues() {
@@ -117,40 +181,52 @@ async function openIssues() {
 }
 
 async function check(version, builds, issues) {
-    const pinned = pinnedCommit(version);
+    const pinnedRevision = pinned(version, /PHP_PATCHES="deb\.sury\.org-([^"]+)"/, 'PHP_PATCHES revision');
+    const pinnedCommit = pinned(version, /DEB_PATCHES=\S*\/archive\/([0-9a-f]{40})\//, 'DEB_PATCHES commit');
     const build = builds.get(`php${version}`);
-    const parsed = build && parseBuild(build);
-    if (!parsed) {
-        throw new Error(`no php${version} build with a commit in the deb.sury.org index (got ${build ?? 'nothing'})`);
+    if (!build) {
+        throw new Error(`no php${version} build in the deb.sury.org index`);
     }
-    if (pinned.startsWith(parsed.commitPrefix)) {
-        console.log(`PHP ${version}: up to date (${build})`);
+    const revision = build.version.replace(/^\d+:/, '').split('+')[0];
+    if (revision === pinnedRevision) {
+        console.log(`PHP ${version}: up to date (${build.version})`);
         return;
     }
 
-    const latest = await fullCommit(parsed.commitPrefix);
-    const [before, after] = await Promise.all([seriesPatches(pinned), seriesPatches(latest)]);
-    const added = after.filter((name) => !before.includes(name));
+    const { tree, series } = await builtPatches(build);
+    const [commit, before] = await Promise.all([matchingCommit(version, tree), seriesPatches(pinnedCommit)]);
+    const { added, removed } = diffSeries(before, series);
 
-    const title = `PHP ${version} patches: new deb.sury.org build ${parsed.revision}`;
+    const title = `PHP ${version} patches: new deb.sury.org build ${revision}`;
     const body = [
-        `deb.sury.org published \`${build}\`, built from Salsa commit [\`${latest.slice(0, 12)}\`](${SALSA}/-/commit/${latest}). Our Dockerfiles pin [\`${pinned.slice(0, 12)}\`](${SALSA}/-/commit/${pinned}).`,
+        `deb.sury.org published \`${build.version}\`. Our Dockerfiles pin \`${pinnedRevision}\`, from Salsa commit [\`${pinnedCommit.slice(0, 12)}\`](${SALSA}/-/commit/${pinnedCommit}).`,
         '',
-        `Changes: ${SALSA}/-/compare/${pinned}...${latest}`,
+        ...(commit
+            ? [
+                  `Salsa commit [\`${commit.slice(0, 12)}\`](${SALSA}/-/commit/${commit}) has the same \`debian/patches\` as the build.`,
+                  '',
+                  `Changes: ${SALSA}/-/compare/${pinnedCommit}...${commit}`,
+              ]
+            : [
+                  `No recent commit on \`debian/main/${version}\` has the same \`debian/patches\` as the build (tree \`${tree}\`): find it by hand.`,
+              ]),
         '',
         'Patches added to its series:',
         ...(added.length ? added.map((name) => `- \`${name}\``) : ['None.']),
         '',
-        `To update, set the new commit in \`DEB_PATCHES\` and the revision in \`PHP_PATCHES\` in every \`eol/${version}/*/Dockerfile\`, and review each new patch into \`eol/patches/series.${version}\`, applied or commented out.`,
+        'Patches removed from its series:',
+        ...(removed.length ? removed.map((name) => `- \`${name}\``) : ['None.']),
+        '',
+        `To update, set the new commit in \`DEB_PATCHES\` and the revision in \`PHP_PATCHES\` in every \`eol/${version}/*/Dockerfile\`, review each new patch into \`eol/patches/series.${version}\`, applied or commented out, and drop the removed ones from it.`,
     ].join('\n');
 
     const existing = issues.find((issue) => issue.title.startsWith(`PHP ${version} patches:`));
     if (existing) {
         await github('PATCH', `/repos/${repository}/issues/${existing.number}`, { title, body });
-        console.log(`PHP ${version}: updated issue #${existing.number} (${build})`);
+        console.log(`PHP ${version}: updated issue #${existing.number} (${build.version})`);
     } else {
         const issue = await github('POST', `/repos/${repository}/issues`, { title, body });
-        console.log(`PHP ${version}: opened issue #${issue.number} (${build})`);
+        console.log(`PHP ${version}: opened issue #${issue.number} (${build.version})`);
     }
 }
 
