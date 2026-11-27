@@ -50,10 +50,12 @@ is empty. Until then, keep building on the official image.
 ## Updating deb.sury.org's patches
 
 The `Track deb.sury.org patches` workflow opens an issue when deb.sury.org publishes a build of an
-EOL version from a newer commit, listing the patches added to its `series`.
+EOL version with a revision other than the one in `PHP_PATCHES`, listing the patches added to its
+`series`.
 
-1. **Find the commit.** deb.sury.org's build versions end in `gbp` and the first 6 hex digits of the
-   Salsa commit (`8.1.34-9+0~20261021.82+debian13~1.gbp4e430a`), listed in
+1. **Find the commit.** deb.sury.org's build versions don't name their Salsa commit, so the issue
+   names one: a commit on `debian/main/<X.Y>` whose `debian/patches` has the same git tree id as
+   the build's `*.debian.tar.xz`, from the pool directory listed for it in
    `https://packages.sury.org/php/dists/trixie/main/source/Sources.gz`.
 2. **Update every flavour's Dockerfile** of the version: the full commit in `DEB_PATCHES`, and
    the deb.sury.org revision without epoch in `PHP_PATCHES` and the label
