@@ -28,6 +28,12 @@ An automated build is set up, so they should be always up-to-date with the Docke
 - `8.4`
 - `8.4-apache`
 - `8.4-fpm`
+- `8.5`
+- `8.5-apache`
+- `8.5-fpm`
+- `8.6`
+- `8.6-apache`
+- `8.6-fpm`
 
 As you might have guessed, all tags are built on top of the corresponding tag of the official image. Not all tags are supported in order to easen maintenance.
 

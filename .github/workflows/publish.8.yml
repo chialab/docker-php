@@ -16,7 +16,7 @@ jobs:
       packages: write
     uses: ./.github/workflows/publish-images.yml
     with:
-      versions: '["8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]'
+      versions: '["8.0", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6"]'
       flavors: '["", "-apache", "-fpm", "-alpine", "-fpm-alpine"]'
     secrets:
       push-username: ${{ secrets.DOCKER_USERNAME }}
