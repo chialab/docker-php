@@ -6,7 +6,7 @@
 
 # chialab: deb.sury.org's patches for this version, from the Salsa commit of the build named in PHP_PATCHES.
 FROM scratch AS deb-patches
-ARG DEB_PATCHES=https://salsa.debian.org/php-team/php/-/archive/9521952fd4f62fc7a1ddafa42588c07b93736e04/php-9521952fd4f62fc7a1ddafa42588c07b93736e04.tar.gz?path=debian/patches
+ARG DEB_PATCHES=https://salsa.debian.org/php-team/php/-/archive/8d4932f63b3fba59099363c9114a07d794d91db8/php-8d4932f63b3fba59099363c9114a07d794d91db8.tar.gz?path=debian/patches
 ADD --unpack=true $DEB_PATCHES /
 
 FROM debian:stretch-slim
@@ -116,8 +116,8 @@ ARG DOCKER_PHP_SCRIPTS=https://raw.githubusercontent.com/docker-library/php/0e5c
 ADD --chmod=755 $DOCKER_PHP_SCRIPTS/docker-php-source /usr/local/bin/
 
 # chialab: security backports for this EOL version (see eol/patches).
-ENV PHP_PATCHES="deb.sury.org-7.0.33-93"
-LABEL it.chialab.php.patches="deb.sury.org-7.0.33-93"
+ENV PHP_PATCHES="deb.sury.org-7.0.33-98"
+LABEL it.chialab.php.patches="deb.sury.org-7.0.33-98"
 RUN --mount=type=bind,from=deb-patches,target=/usr/src/deb-patches \
 	--mount=type=bind,from=patches,source=series.7.0,target=/usr/src/php-series \
 	--mount=type=bind,from=patches,source=docker-php-source-patch,target=/usr/local/bin/docker-php-source-patch \
